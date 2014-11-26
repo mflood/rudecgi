@@ -1,0 +1,57 @@
+ ChangeLog for RudeCGI C++ Library
+
+ Copyright (C) 2005 Matthew Flood
+ See file AUTHORS for contact information
+
+ This file is part of RudeCGI.
+
+ RudeCGI is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2, or (at your option)
+ any later version.
+ 
+ RudeCGI is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with RudeCGI; (see COPYING) if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+ 02111-1307, USA.
+
+
+* Wed May 23 2007 Matt Flood <matt@rudeserver.com>
+-[5.0.0-1]
+- Interface Changes
+	- renamed main object from "CGIParser" to "CGI"
+- Build Scripts
+	- Updated build scripts to create rpms properly
+
+* Thu Jan 11 2007 Matt Flood <matt@rudeserver.com>
+-[4.1.1-1]
+- Bug Fixes
+	- Since apache presents multiple cookies as a semi-colon delimited list,
+          the comma was removed from the cookie tokenizing function in CookieParser.cpp:
+
+	  char *key=strtok(buffer, "; \t\f\r\n,");
+
+	- Increased const correctness throughout library
+	- Improved the File Parsing Algorithm in NewMultipartParser 
+	  where chomping newlines is concerned
+- Created MAN page
+
+* Thu Apr 10 2006 Matt Flood <matt@rudeserver.com>
+- [4.0.1-1]
+- First RPM Release
+
+* Fri Jun 10 2005 Matt Flood <matt@rudeserver.com>
+- [4.0.1-0]
+- Renamed all .cc to .cpp to facilitate windows builds
+
+* Mon May 16 2005 Matt Flood <matt@rudeserver.com>
+- [4.0.1-0]
+- Converted RudeCGI to Open Source
+
+--End of Change Log--
+

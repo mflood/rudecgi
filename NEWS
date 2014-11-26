@@ -1,0 +1,52 @@
+RudeCGI NEWS - User visible changes.
+See ChangeLog for more detailed information on internal changes
+See the end for copying conditions.
+
+
+__________________________________________________________________________________
+Release 5.0.0-1 - Matthew Flood 2007-05-23
+
+	- Changed public interface name from CGIParser to CGI
+	- Minor amendments to build-related scripts
+
+__________________________________________________________________________________
+
+Release 4.1.1-1 - Matthew Flood 2007-01-11
+
+	- Bug Fixes regarding cookie parsing and file upload parsing
+
+__________________________________________________________________________________
+Release 4.0.1-1 - Matthew Flood 2006-04-10
+
+	** RudeCGI became open source and is distributed under the GNU Public License.
+		Commercial licenses are available for a fee, and allow the holder
+		to use the library in commercial applications. Contact info@rudeserver.com
+		for more details.
+		
+	** Changed package versioning: 
+		now using the LIBRARY_VERSION-RELEASE_VERSION
+		Release version will be set to 1 for each new lib version
+		
+	** Rolled the package into binary and source RPMs
+__________________________________________________________________________________
+
+Copyright (C) 2005 Matthew Flood
+See file AUTHORS for contact information
+
+This file is part of RudeCGI.
+
+RudeCGI is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2, or (at your option)
+any later version.
+
+RudeCGI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with RudeCGI; (see COPYING) if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+02111-1307, USA.
+

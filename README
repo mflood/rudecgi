@@ -1,0 +1,67 @@
+README for RudeCGI
+See the end of file for copying conditions
+
+This file contains the following sections, please
+glance through them all before installing RudeCGI.
+
+	* Introduction
+	* Bug Reporting
+	* Copying
+	
+
+*** INTRODUCTION ***
+
+RudeCGI is a library that provides applications with access to
+CGI formdata.  This includes information submitted using GET or
+POST methods.  Where web-servers provide additional environmental
+information, the library also makes Path info and Cookie data available.
+
+Documentation, discussions, and new releases are available at 
+
+http://www.rudeserver.com/cgi
+
+See file `COPYING' for copying conditions.
+See file `INSTALL' for compilation and installation instructions.
+See file `NEWS' for a list of major changes in the current release.
+See file `THANKS' for a list of contributors.
+See file 'AUTHORS' for contact information
+
+
+*** BUG REPORTING ***
+
+Please Send bug reports to <rudecgi@rudeserver.com>.
+A bug report should contain an adequate description of the 
+problem, your input, what you expected, what you got, 
+and why this is wrong.  Where applicable, please submit actual data
+files with your report. 
+
+Your feedback will help us to make a better and more portable package.
+Consider documentation errors as bugs, and report them as such.  If you
+develop anything pertaining to RudeCGI or have suggestions, let us know
+and share your findings by writing to <rudecgi@rudeserver.com> or
+by visiting the discussion forum accessable from the RudeServer 
+website at http://www.rudeserver.com/
+
+
+
+*** COPYING ***
+
+Copyright (C) 2005 Matthew Flood
+See file AUTHORS for contact information
+
+This file is part of RudeCGI.
+
+RudeCGI is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2, or (at your option)
+any later version.
+
+RudeCGI is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with RudeCGI; (see COPYING) if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+02111-1307, USA.

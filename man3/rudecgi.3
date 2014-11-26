@@ -1,0 +1,150 @@
+.\" Process this file with 
+.\" groff -man -Tascii rudecgi.3
+.\"
+.TH rudecgi 3  "January 11, 2006" "Version 4.1.1" "User Manuals"
+.SH NAME
+rudecgi \- access formdata in CGI applications
+.SH SYNOPSIS
+.B #include <rude/cgi.h>
+
+.BI	"rude::CGI CGI();" 
+
+.BI	"static void finish();" 
+
+.BI	"static const char *version();"
+
+.BI	"static void setPathDelimiter(char " "delimiter" ");"
+
+.BI	"static void addPathMapName(const char *" "pathname" " );"
+
+.BI	"static void setPathMapVoid(const char *" "emptyname" ");"
+
+.BI	"static void parsePathMap(bool " "shouldParse" ");"
+
+.BI	"static void parsePath(bool " "shouldParse" ");"
+
+.BI	"static void parseCookies(bool " "shouldParse" ");"
+
+.BI	"static void maxPostLength(long " "bytes" ");"
+
+.BI	"void setCaseSensitive(bool " "isCaseSensitive" ");"
+
+.BI	"int numValues() const;"
+
+.BI	"int numValues(const char *" "fieldname" ") const;"
+
+.BI	"const char *fieldnameAt(int " "position" ") const;"
+
+.BI	"bool exists(const char *" "fieldname" ") const;"
+
+.BI	"bool isFile(int " "index" ") const;"
+
+.BI	"bool isFile(const char *" "fieldname" ") const;"
+
+.BI	"bool isFile(const char *" "fieldname" ", int " "position" ");"
+
+.BI	"const char *datasource(int " "index" ") const;"
+
+.BI	"const char *datasource(const char *" "fieldname" ") const;"
+
+.BI	"const char *datasource(const char *" "fieldname" ", int " "position" ") const;"
+
+.BI	"const char * operator[](const char *" "fieldname" ");"
+
+.BI	"const char * operator[](int " "x" ");"
+
+.BI	"const char *value(int " "index" ") const;"
+
+.BI	"const char *value(const char *" "fieldname" ") const;"
+
+.BI	"const char *value(const char *" "fieldname" ", int " "position" ") const;"
+
+.BI	"const char *length(int " "index" ") const;"
+
+.BI	"const char *length(const char *" "fieldname" ") const;"
+
+.BI	"const char *length(const char *" "fieldname" ", int " "position" ") const;"
+
+.BI	"const char *contenttype(int " "index" ") const;"
+
+.BI	"const char *contenttype(const char *" "fieldname" ") const;"
+
+.BI	"const char *contenttype(const char *" "fieldname" ", int " "position" ") const;"
+
+.BI	"const char *filename(int " "index" ") const;"
+
+.BI	"const char *filename(const char *" "fieldname" ") const;"
+
+.BI	"const char *filename(const char *" "fieldname" ", int " "position" ") const;"
+
+.BI	"const char *filepath(int " "index" ") const;"
+
+.BI	"const char *filepath(const char *" "fieldname" ") const;"
+
+.BI	"const char *filepath(const char *" "fieldname" ", int " "position" ") const;"
+
+.BI	"std::ostream& operator<<(std::ostream& " "os" ",const CGI& " "cgi" ");"
+
+
+.SH DESCRIPTION
+
+The RudeCGI library is used to access formdata within C++ CGI applications.
+
+
+.SH EXAMPLES
+
+Examples, how-to's and tutorials can also be found at the rudeserver.com website
+
+.B Basic Usage
+
+#include <rude/cgi.h>
+#include <iostream>
+
+using namespace std;
+using namespace rude;
+
+int main(void)
+{
+  // Obtain the cgi instance
+  //
+  CGI cgi;
+
+  // Print out standard CGI HTTP Response header
+  //
+  cout << "Content-Type: text/html\n\n";
+
+  // Print out HTML
+  //
+  cout << "<html><body>"
+       << "You selected the color: " ;
+
+  // use the cgi object to obtain form data
+  //
+  cout << cgi["color"];
+
+  cout << "</body></html>";
+
+  return 0;
+}
+
+	
+
+.SH SEE ALSO
+.BR rudeconfig(3),
+.BR rudedatabase(3),
+.BR rudesocket(3),
+.BR rudesession(3)
+
+.SH REPORTING PROBLEMS
+
+Before  reporting  a problem, please check the rudeserver.com web site to verify that you have the latest version of rudecgi; otherwise, obtain the latest version and see if the problem still exists.  Please read the  FAQ at:
+
+              http://www.rudeserver.com/
+
+before asking for help.  Send questions and/or comments to  matt@rudeserver.com
+
+.SH AUTHORS
+Copyright (C) 2000 Matthew Flood (matt@rudeserver.com)
+
+This  software is provided "as-is," without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.  See the distribution directory with respect  to  requirements  governing  redistribution. Thanks to all the people who reported problems and suggested various improvements in rudecgi; who are too numerous to cite here.
+
