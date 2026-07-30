@@ -43,7 +43,7 @@ class AbstractImplementation;
 // <h3>1. Optional Methods to call first</h3>
 // 
 // These methods configure the <b>CGI</b> component before it parses any incoming data. 
-// As such, they must be called before the first call to {@link #instance CGI::instance()}, which triggers the parsing. 
+// As such, they must be called before the first rude::CGI object is constructed, which triggers the parsing. 
 // Calling these methods after the parsing occurs has no effect.
 // <p>
 // <ul>
@@ -59,12 +59,11 @@ class AbstractImplementation;
 // 
 //
 // <h3>2. Obtaining the CGI object</h3>
-// After all optional instance methods are called, it is safe to access the single instance of the CGI object. 
-// Since the CGI object uses the Singleton design pattern, it is globally accessable from everywhere in your program. 
-// However, since only one instance ever exists - don't delete it, unless you are absolutely sure your program is done with it.
+// After all optional static methods are called, construct a rude::CGI object.
+// Parsing of the incoming request happens in the constructor.
 // <p>
 // <ul>
-// <li>{@link #instance CGI::instance()}</li>
+// <li><code>rude::CGI cgi;</code></li>
 // </ul>
 //
 // 
@@ -275,11 +274,11 @@ public:
 	// <b>Example:</b>
 	// <p>
 	// <pre><code>
-	// CGI *parser = CGI::instance();
-	// parser->setCaseSensitive(false);
-	// const char *emailAddress1 = parser->value("EmAiL"); // will match "email"
-	// parser->setCaseSensitive(true);
-	// const char *emailAddress2 = parser->value("EmAiL"); // will NOT match "email"
+	// rude::CGI cgi;
+	// cgi.setCaseSensitive(false);
+	// const char *emailAddress1 = cgi.value("EmAiL"); // will match "email"
+	// cgi.setCaseSensitive(true);
+	// const char *emailAddress2 = cgi.value("EmAiL"); // will NOT match "email"
 	// </code></pre>
 	//=
 	void setCaseSensitive(bool isCaseSenstive);
