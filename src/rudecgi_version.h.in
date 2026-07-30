@@ -1,0 +1,7 @@
+// Generated from rudecgi_version.h.in by CMake -- do not edit.
+#ifndef INCLUDED_RUDECGI_VERSION_H
+#define INCLUDED_RUDECGI_VERSION_H
+
+#define RUDECGI_VERSION_STRING "@PROJECT_VERSION@"
+
+#endif

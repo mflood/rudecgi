@@ -29,6 +29,11 @@ Release 5.1.1 - Matthew Flood 2026-07-30
 	- Removed the last references to the CGI::instance() method from the
 	  installed header.  5.1.0 corrected this in the README but left the
 	  doc comments in cgi.h teaching an API that does not exist.
+	- CGI::version() now reports the release version.  It returned a
+	  hardcoded "RudeServer CGI Version 3.0" that had not tracked a
+	  release since before 4.0, so callers could not tell what they had
+	  linked.  The value is now generated from the build so it cannot
+	  drift again.
 	- Added regression tests for all of the above, including scenarios
 	  that crash or leak under AddressSanitizer without these fixes.
 

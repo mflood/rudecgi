@@ -6,6 +6,11 @@ add_executable(test_post test_post.cpp)
 target_link_libraries(test_post PRIVATE rudecgi::rudecgi)
 add_test(NAME post COMMAND test_post)
 
+add_executable(test_version test_version.cpp)
+target_link_libraries(test_version PRIVATE rudecgi::rudecgi)
+target_compile_definitions(test_version PRIVATE EXPECTED_VERSION="${PROJECT_VERSION}")
+add_test(NAME version COMMAND test_version)
+
 add_executable(test_cookie test_cookie.cpp)
 target_link_libraries(test_cookie PRIVATE rudecgi::rudecgi)
 add_test(NAME cookie COMMAND test_cookie)
@@ -25,7 +30,7 @@ foreach(s IN LISTS CONTENT_LENGTH_SCENARIOS)
 endforeach()
 
 # Each test runs in its own scratch dir so file fixtures don't collide.
-set(ALL_TESTS get post cookie ${CONTENT_LENGTH_TESTS})
+set(ALL_TESTS get post cookie version ${CONTENT_LENGTH_TESTS})
 set_tests_properties(${ALL_TESTS} PROPERTIES TIMEOUT 60)
 foreach(t IN LISTS ALL_TESTS)
     file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/run-${t}")
