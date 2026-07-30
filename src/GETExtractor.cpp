@@ -67,6 +67,13 @@ bool GETExtractor::PARSEPATHMAP = false;
 
 DataRepos *GETExtractor::extractDataRepos()
 {
+	DataRepos *repository = extractDataReposWithoutCookies();
+	parseCookiesInto(repository);
+	return repository;
+}
+
+DataRepos *GETExtractor::extractDataReposWithoutCookies()
+{
 	DataRepos *repository = new DataRepos();
 	
 	// Parse the Query String
@@ -115,28 +122,32 @@ DataRepos *GETExtractor::extractDataRepos()
 		delete [] buffer;
 	}
 
-	// Parse Cookies
-	//
-	char  *cookiestring=getenv("HTTP_COOKIE");
-	if(cookiestring != NULL && PARSECOOKIES)
-	{
-		CookieParser parser;
-
-		int length = strlen(cookiestring);
-
-		// the parser mangles input, so copy querystring into temp buffer
-		//
-		char *buffer = new char[length+1];
-		strcpy(buffer, cookiestring);
-		
-		parser.parse(repository, buffer, length);
-
-		delete [] buffer;
-	}
 
 
 	
 	return repository;
+}
+
+void GETExtractor::parseCookiesInto(DataRepos *repository)
+{
+	char  *cookiestring=getenv("HTTP_COOKIE");
+	if(cookiestring == NULL || !PARSECOOKIES)
+	{
+		return;
+	}
+
+	CookieParser parser;
+
+	int length = strlen(cookiestring);
+
+	// the parser mangles input, so copy the cookie string into a temp buffer
+	//
+	char *buffer = new char[length+1];
+	strcpy(buffer, cookiestring);
+
+	parser.parse(repository, buffer, length);
+
+	delete [] buffer;
 }
 
 ClientData *GETExtractor::extract()

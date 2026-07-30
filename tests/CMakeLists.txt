@@ -29,6 +29,11 @@ foreach(s IN LISTS CONTENT_LENGTH_SCENARIOS)
     list(APPEND CONTENT_LENGTH_TESTS content_length_${s})
 endforeach()
 
+add_executable(test_precedence test_precedence.cpp)
+target_link_libraries(test_precedence PRIVATE rudecgi::rudecgi)
+add_test(NAME precedence_get COMMAND test_precedence get)
+add_test(NAME precedence_post COMMAND test_precedence post)
+
 # Each test runs in its own scratch dir so file fixtures don't collide.
 set(ALL_TESTS get post cookie version ${CONTENT_LENGTH_TESTS})
 set_tests_properties(${ALL_TESTS} PROPERTIES TIMEOUT 60)

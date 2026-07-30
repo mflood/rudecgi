@@ -46,6 +46,17 @@ public:
 	
 	ClientData *extract();
 	DataRepos *extractDataRepos();
+
+	// As above, but leaves cookies out of the repository.  POSTExtractor
+	// uses this so it can parse the POST body first and apply cookies
+	// afterwards, keeping form data ahead of cookies on both methods.
+	//
+	DataRepos *extractDataReposWithoutCookies();
+
+	// Parses HTTP_COOKIE into an existing repository, honouring
+	// PARSECOOKIES.
+	//
+	static void parseCookiesInto(DataRepos *repository);
 };
 
 }} // end namespaces
