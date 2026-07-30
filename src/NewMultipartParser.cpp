@@ -153,7 +153,7 @@ bool NewMultipartParser::parse(DataRepos *repository, char *data, int length)
 
 				// get rid of newline chars that follow this boundary.
 				//
-				while(data[x + 1] == '\n' || data[x + 1] == 0x0a || data[x + 1] == 0x0d)
+				while(data[x + 1] == 0x0a || data[x + 1] == 0x0d)
 				{
 					x++;
 				}
@@ -261,10 +261,14 @@ void NewMultipartParser::parseSection(DataRepos *repository, char *data, int len
 				contentptr = ++tempptr;
 			}
 
-			// find end quote
-			int seglength = strcspn(contentptr, ";");
-			tempptr += seglength;
-			*tempptr = (char) NULL;
+			// Truncate at the ';' that starts any parameters, or at the end
+			// of the string if there is none.  This used to advance and
+			// dereference tempptr, which is NULL when the header carries no
+			// space - a malformed Content-Type then wrote through a wild
+			// pointer.  Index from contentptr instead, which is always valid.
+			//
+			int seglength = (int) strcspn(contentptr, ";");
+			contentptr[seglength] = 0;
 			parseElem->setContentType(contentptr);
 			////printf("Found CONTENTTYPE: '<B>%s</B>'<BR>", contentptr);
 		}
