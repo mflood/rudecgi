@@ -1,27 +1,36 @@
 README for RudeCGI
 See the end of file for copying conditions
 
-This file contains the following sections, please
-glance through them all before installing RudeCGI.
-
-	* Introduction
-	* Bug Reporting
-	* Copying
-	
 
 *** INTRODUCTION ***
 
-RudeCGI is a library that provides applications with access to
-CGI formdata.  This includes information submitted using GET or
-POST methods.  Where web-servers provide additional environmental
-information, the library also makes Path info and Cookie data available.
+RudeCGI is a library that provides applications with access to CGI form
+data.  This includes information submitted using GET or POST methods.  Where
+web servers provide additional environmental information, the library also
+makes path info and cookie data available.
 
-Documentation, discussions, and new releases are available at 
+Full documentation, including a quick start and API notes, is in README.md.
 
-http://www.rudeserver.com/cgi
+
+*** BUILDING ***
+
+RudeCGI builds with CMake:
+
+	cmake -B build -DCMAKE_BUILD_TYPE=Release
+	cmake --build build
+	ctest --test-dir build
+	cmake --install build
+
+Then include <rude/cgi.h> and link with -lrudecgi, or use
+find_package(rudecgi) from CMake, or pkg-config.
+
+The autotools build (configure / Makefile.am) was removed in this release.
+It had been deprecated since the CMake build landed, and its shipped
+config.guess dated from 2003, so it could not configure on any ARM machine -
+which today means every Apple Silicon Mac and every ARM Linux server.  If you
+need it, check out the v5.2.0 tag or earlier.
 
 See file `COPYING' for copying conditions.
-See file `INSTALL' for compilation and installation instructions.
 See file `NEWS' for a list of major changes in the current release.
 See file `THANKS' for a list of contributors.
 See file 'AUTHORS' for contact information
@@ -29,19 +38,15 @@ See file 'AUTHORS' for contact information
 
 *** BUG REPORTING ***
 
-Please Send bug reports to <rudecgi@rudeserver.com>.
-A bug report should contain an adequate description of the 
-problem, your input, what you expected, what you got, 
-and why this is wrong.  Where applicable, please submit actual data
-files with your report. 
+Please report bugs at https://github.com/mflood/rudecgi/issues
 
-Your feedback will help us to make a better and more portable package.
-Consider documentation errors as bugs, and report them as such.  If you
-develop anything pertaining to RudeCGI or have suggestions, let us know
-and share your findings by writing to <rudecgi@rudeserver.com> or
-by visiting the discussion forum accessable from the RudeServer 
-website at http://www.rudeserver.com/
+A bug report should contain an adequate description of the problem, your
+input, what you expected, what you got, and why this is wrong.  Where
+applicable, please include actual data files.  Consider documentation errors
+as bugs, and report them as such.
 
+The rudeserver.com addresses and discussion forum referenced by older
+releases are no longer active.
 
 
 *** COPYING ***
