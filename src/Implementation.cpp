@@ -117,7 +117,12 @@ const char *Implementation::datasource(const char *fieldname, int position) cons
 const char *Implementation::value( const char *fieldname) const
 {
 	const char *ret = d_clientdata->value(fieldname, 0);
-	return ret;
+
+	// value(fieldname) is documented to return "" for an unknown field
+	// and to never return NULL, while value(fieldname, position) is
+	// documented to return NULL past the end.  Bridge the two here.
+	//
+	return ret ? ret : "";
 }
 
 const char * Implementation::value(const char *fieldname, int position) const 

@@ -13,6 +13,19 @@ Release 5.2.0 - Matthew Flood 2026-07-30
 	  values are still present and reachable by index, and datasource()
 	  still reports the origin of each; only the unindexed lookup changes,
 	  and only on POST.
+	- BEHAVIOR CHANGE: value(index) and value(fieldname, position) now
+	  return NULL when the index or position is out of bounds, as cgi.h
+	  has always documented.  They returned the empty string instead, so
+	  the enumeration loop printed in the header's own example -
+	
+	      while(category = parser->value("cat", x++))
+	
+	  - never terminated.  value(fieldname) is unchanged: it still
+	  returns "" for an unknown field and never returns NULL.
+	- contenttype() now returns "application/x-formdata" for data that is
+	  not an uploaded file, which is the default cgi.h documents.  It
+	  returned the empty string, so that documented value appeared
+	  nowhere in the library.
 	- New CGI::maxPostReadSeconds(long) bounds how long reading the POST
 	  body will wait.  A client that over-declares CONTENT_LENGTH and then
 	  holds the connection open used to pin the process indefinitely,

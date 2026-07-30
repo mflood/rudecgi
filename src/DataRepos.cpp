@@ -150,7 +150,11 @@ const char *DataRepos::value(int index) const
 		}
 			x++;
 	}
-	return "";		
+
+	// Out of bounds is NULL, as cgi.h documents.  Returning "" here made
+	// the enumeration loop in the header's own example run forever.
+	//
+	return 0;
 }
 	
 const char *DataRepos::value(const char *fieldname, int position) const
@@ -172,7 +176,12 @@ const char *DataRepos::value(const char *fieldname, int position) const
 			x++;
 		}
 	}
-	return "";		
+
+	// Unknown fieldname, or position past the last match: NULL, as
+	// cgi.h documents.  The single-argument value(fieldname) overload is
+	// documented never to return NULL and converts this in Implementation.
+	//
+	return 0;
 }
 
 const char *DataRepos::filepath(int index) const

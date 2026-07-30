@@ -11,6 +11,10 @@ target_link_libraries(test_version PRIVATE rudecgi::rudecgi)
 target_compile_definitions(test_version PRIVATE EXPECTED_VERSION="${PROJECT_VERSION}")
 add_test(NAME version COMMAND test_version)
 
+add_executable(test_contract test_contract.cpp)
+target_link_libraries(test_contract PRIVATE rudecgi::rudecgi)
+add_test(NAME contract COMMAND test_contract)
+
 add_executable(test_cookie test_cookie.cpp)
 target_link_libraries(test_cookie PRIVATE rudecgi::rudecgi)
 add_test(NAME cookie COMMAND test_cookie)
