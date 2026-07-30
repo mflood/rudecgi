@@ -4,6 +4,35 @@ See the end for copying conditions.
 
 
 __________________________________________________________________________________
+Release 5.1.1 - Matthew Flood 2026-07-30
+
+	- SECURITY: fixed disclosure of uninitialised heap memory through
+	  POSTed field values.  The POST buffer was allocated but never
+	  zeroed and fread()'s return value was ignored, so a CONTENT_LENGTH
+	  larger than the body actually sent left the tail of the buffer
+	  uninitialised - and it was parsed and returned to the caller as
+	  field data.  Only the bytes actually read are now parsed.
+	- Fixed crash on a missing CONTENT_LENGTH.  The value was passed
+	  straight to atoi(), which dereferences NULL when the variable is
+	  absent - as it is for any GET, any POST with no body, and any run
+	  from a shell.  CGI::maxPostLength() did not prevent this because
+	  the cap was applied after the atoi() call; it is now applied
+	  before anything is parsed or allocated.
+	- CONTENT_LENGTH is now validated: negative values, non-numeric
+	  values, trailing garbage and values beyond INT_MAX are rejected
+	  rather than silently reinterpreted, and an outsized declared
+	  length can no longer abort the process through std::bad_alloc.
+	- Fixed pkg-config file: it hardcoded the prefix given at configure
+	  time, so installing with "cmake --install --prefix <dir>" produced
+	  a rudecgi.pc still pointing at the configure-time prefix (by
+	  default /usr/local).  The prefix is now relative to ${pcfiledir}.
+	- Removed the last references to the CGI::instance() method from the
+	  installed header.  5.1.0 corrected this in the README but left the
+	  doc comments in cgi.h teaching an API that does not exist.
+	- Added regression tests for all of the above, including scenarios
+	  that crash or leak under AddressSanitizer without these fixes.
+
+__________________________________________________________________________________
 Release 5.1.0 - Matthew Flood 2026-07-30
 
 	- New CMake build system (autotools files retained but deprecated);
