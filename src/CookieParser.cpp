@@ -9,18 +9,17 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 // 02111-1307, USA.
 //------------------------------------------------------------------------
-
 
 
 
@@ -44,32 +43,34 @@
 #define INCLUDED_CTYPE_H
 #endif
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 
 // Helper Method
 //
 void CookieParser::addField(DataRepos *repository, const char *fieldstuff)
 {
-	int len=strlen(fieldstuff);
-	if(len==0)
+	int len = strlen(fieldstuff);
+	if(len == 0)
 	{
 		return;
 	}
-	char *buffer=new char[len+1];
+	char *buffer = new char[len + 1];
 	strcpy(buffer, fieldstuff);
-	
-	char *value=strchr(buffer, '=');
+
+	char *value = strchr(buffer, '=');
 	if(value)
 	{
-		*value=(char)NULL;
+		*value = (char) NULL;
 		AbstractParser::unescape(++value);
 	}
 	AbstractParser::unescape(buffer);
-	
-	CookieData *newData=new CookieData(buffer, value);
+
+	CookieData *newData = new CookieData(buffer, value);
 	repository->addDataObject(newData);
-	delete []buffer;
+	delete[] buffer;
 }
 
 
@@ -84,14 +85,14 @@ bool CookieParser::parse(DataRepos *repository, char *buffer, int length)
 	{
 		// we have a length of at least 1, so this will always return something
 		//
-		char *key=strtok(buffer, "; \t\f\r\n");
+		char *key = strtok(buffer, "; \t\f\r\n");
 		if(key)
 		{
 			addField(repository, key);
 
 			// get more tokens
 			//
-			while((key=strtok(NULL, "; \t\f\r\n"))!=NULL)
+			while((key = strtok(NULL, "; \t\f\r\n")) != NULL)
 			{
 				addField(repository, key);
 			}
@@ -100,5 +101,5 @@ bool CookieParser::parse(DataRepos *repository, char *buffer, int length)
 	return true;
 }
 
-}} // end namespaces
-
+} // namespace cgiparser
+} // namespace rude

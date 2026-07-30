@@ -9,12 +9,12 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -28,22 +28,24 @@
 
 #include <iostream>
 
-namespace rude{
+namespace rude
+{
 
-namespace cgiparser{
+namespace cgiparser
+{
 class AbstractImplementation;
 }
 
 //=
-// This is the public interface to the entire component. 
+// This is the public interface to the entire component.
 // Since it is foreseen that the interface will include cookie and path gathering info in the future, (oh - update - it does now!)
 // the interface is separated from its implementation using the bridge pattern.
 // <p>
 //
 // <h3>1. Optional Methods to call first</h3>
-// 
-// These methods configure the <b>CGI</b> component before it parses any incoming data. 
-// As such, they must be called before the first rude::CGI object is constructed, which triggers the parsing. 
+//
+// These methods configure the <b>CGI</b> component before it parses any incoming data.
+// As such, they must be called before the first rude::CGI object is constructed, which triggers the parsing.
 // Calling these methods after the parsing occurs has no effect.
 // <p>
 // <ul>
@@ -57,7 +59,7 @@ class AbstractImplementation;
 // <li>{@link #maxPostReadSeconds CGI::maxPostReadSeconds(long seconds)}</li>
 // </ul>
 //
-// 
+//
 //
 // <h3>2. Obtaining the CGI object</h3>
 // After all optional static methods are called, construct a rude::CGI object.
@@ -67,7 +69,7 @@ class AbstractImplementation;
 // <li><code>rude::CGI cgi;</code></li>
 // </ul>
 //
-// 
+//
 //
 // <h3>3. Using the CGI object  (exploratory methods)</h3>
 //
@@ -81,14 +83,14 @@ class AbstractImplementation;
 // <li>{@link #fieldnameAt fieldnameAt(int index)}</li>
 // </ul>
 //
-// 
-// 
+//
+//
 // <h3>4. Using the CGI object (data methods)</h3>
 //
 // The rest of the methods deal with accessing a particular piece of data, and they all exist in three forms.
 // The first form, <code><b>method(int index)</b></code>, accesses a data-pair at a specified index within the collection, regardless of the fieldname.
-// The second form, <code><b>method(const char *fieldname)</b></code>, accesses the first data-pair identified by fieldname, 
-// in the likely event that only one data-pair with the given fieldname was submitted. 
+// The second form, <code><b>method(const char *fieldname)</b></code>, accesses the first data-pair identified by fieldname,
+// in the likely event that only one data-pair with the given fieldname was submitted.
 // For those cases where multiple values were submitted with the same identifying fieldname, the third form,
 // <code><b>method(const char *fieldname, int position)</b></code>, allows access to each data-pair associated with the name.
 //<p>
@@ -102,14 +104,13 @@ class AbstractImplementation;
 // <li>{@link #filename}</li>
 // </ul>
 //=
-class CGI{
+class CGI
+{
 
 	static rude::cgiparser::AbstractImplementation *s_implementation;
 
-protected:
-
-public:
-
+  protected:
+  public:
 	//=
 	// Returns the Singleton instance of the <b>CGI</b> object.
 	// The first call to this method triggers the parsing of all incoming data.
@@ -122,7 +123,7 @@ public:
 	// </code>
 	//=
 	CGI();
-	
+
 	static void finish();
 
 	//=
@@ -210,8 +211,8 @@ public:
 
 	//=
 	// Setting this to <b>true</b> enables the parsing of PATH_INFO using a pathmap. By default, this is set to <b>false</b>.<br>
-	// If set to true, parsing by <i>path map</i> occurs after parsing by <i>delimiter</i>. 
-	// Paths are mapped only after failing to be parsed by delimiter - either by not haveing the delimiter present in the path section, 
+	// If set to true, parsing by <i>path map</i> occurs after parsing by <i>delimiter</i>.
+	// Paths are mapped only after failing to be parsed by delimiter - either by not haveing the delimiter present in the path section,
 	// or having {@link #parsePath parsePath()} set to false.
 	// <p>
 	// <b>Example:</b>
@@ -223,10 +224,10 @@ public:
 	//=
 	static void parsePathMap(bool shouldParse);
 	//=
-	// Enable / disable parsing of PATH_INFO (default enabled). 
-	// Setting this to <b>false</b> disables the parsing of PATH_INFO using a character delimiter. 
-	// If the delimiting character is not present, the path info is ignored. 
-	// If the delimiting character is not present and {@link #parsePathMap parsePathMap()} is enabled, 
+	// Enable / disable parsing of PATH_INFO (default enabled).
+	// Setting this to <b>false</b> disables the parsing of PATH_INFO using a character delimiter.
+	// If the delimiting character is not present, the path info is ignored.
+	// If the delimiting character is not present and {@link #parsePathMap parsePathMap()} is enabled,
 	// then the path info for the section in question is Mapped to the next pathmap index.
 	// <p>
 	// <b>Example:</b>
@@ -238,7 +239,7 @@ public:
 	//=
 	static void parsePath(bool shouldParse);
 	//=
-	//	Enable / Disable cookie parsing (default <b>enabled</b>). 
+	//	Enable / Disable cookie parsing (default <b>enabled</b>).
 	// Setting this to false disables the parsing of cookie data.
 	// <p>
 	// <b>Example:</b>
@@ -250,9 +251,9 @@ public:
 	//=
 	static void parseCookies(bool shouldParse);
 	//=
-	// Sets the maximum number of bytes that is acceptable for POST'ed data. The default value, 0, allows an unlimited length. 
+	// Sets the maximum number of bytes that is acceptable for POST'ed data. The default value, 0, allows an unlimited length.
 	// If a non-zero positive number is used, then parsing of POST'ed data will not occur if the length is equal to or greater than the maximum allowable length.
-	// If you don't expect large amounts of data to be sent to the application, setting a maximum POST thresh-hold will prevent D.O.S. attacks involving large 
+	// If you don't expect large amounts of data to be sent to the application, setting a maximum POST thresh-hold will prevent D.O.S. attacks involving large
 	// data transmissions. To eliminate POSTed data altogether, use the value 1. Note that parsing of the query-string, PATH_INFO, and cookies will still occur
 	// regardless of whether or not POST'ed data is ignored.
 	// <p>
@@ -308,7 +309,7 @@ public:
 	void setCaseSensitive(bool isCaseSenstive);
 
 	//=
-	// Returns the total number of key=value pairs that were found. 
+	// Returns the total number of key=value pairs that were found.
 	// The number includes values obtained from PATH_INFO and HTTP_COOKIE in addition to the GET and POSTed data.
 	//=
 	int numValues() const;
@@ -317,24 +318,24 @@ public:
 	// <p>
 	// <code><font color=6666cc><b>?color=blue&color=red&color=yellow</b></font></code>
 	// <p>
-	// Then <code><b>numValues("color")</b></code> would return 3. Note that the value associated with a fieldname <i>can</i> be empty (""). 
+	// Then <code><b>numValues("color")</b></code> would return 3. Note that the value associated with a fieldname <i>can</i> be empty ("").
 	// As such, the following query string would yield the same result as the one above:
 	// <p>
 	// <code><font color=6666cc><b>?color=&color=&color=yellow</b></font></code>
 	// <p>
-	// This method can also be used to determine if a field was sent at all (if the result is 0). 
+	// This method can also be used to determine if a field was sent at all (if the result is 0).
 	// However, the method {@link #exists exists()} is also available for this purpose.
 	// <p>
 	//=
 	int numValues(const char *fieldname) const;
 	//=
-	// Returns the name of the field at the specified index within the data collection. 
-	// If the fieldname is empty, the method returns "". 
+	// Returns the name of the field at the specified index within the data collection.
+	// If the fieldname is empty, the method returns "".
 	// If the index is out of bounds, the method returns NULL.
 	// <p>
 	//=
 	const char *fieldnameAt(int position) const;
-	
+
 	//=
 	// Check if a certain field exists.
 	// Returns true if at least one data item matching the fieldname was sent (regardless of whether the value is empty or not), false otherwise.
@@ -364,9 +365,9 @@ public:
 
 	//=
 	// Returns the source (form, path, cookie) of the data found at <i>index</i> within the collection.
-	// Currently, the sources can either be "form", "cookie", or "path". 
-	// If the source is "form", then the data pair was obtained from POST'ed data or the Query String. 
-	// If the source is "cookie", the the data pair was extraced from the submitted cookies. 
+	// Currently, the sources can either be "form", "cookie", or "path".
+	// If the source is "form", then the data pair was obtained from POST'ed data or the Query String.
+	// If the source is "cookie", the the data pair was extraced from the submitted cookies.
 	// If the source is "path", then the data was extracted from PATH_INFO.
 	// <br>
 	// Please note: <b>"form"</b> data includes file uploads (multipart/form-data) as well as XML, which are both sent as POST'ed data.
@@ -380,25 +381,25 @@ public:
 	const char *datasource(const char *fieldname) const;
 
 	//=
-	// Returns the source (form, path, cookie) of the <i>nth</i> data member identified by <i>fieldname</i>.  
+	// Returns the source (form, path, cookie) of the <i>nth</i> data member identified by <i>fieldname</i>.
 	// @see #datasource(int)
-	//=	
+	//=
 	const char *datasource(const char *fieldname, int position) const;
 
 	//=
 	// Shorthand for value(const char *fieldname);
 	//=
-	const char * operator [] (const char * fieldname);
+	const char *operator[](const char *fieldname);
 
 
 	//=
 	// Shorthand for fieldnameAt(x)
 	//=
-	const char * operator [] (int x);
+	const char *operator[](int x);
 
 	//=
-	// Returns the value of the data-pair that exists at the specified index. 
-	// If no value exists for the data-pair at that index, the method returns the empty string (""). 
+	// Returns the value of the data-pair that exists at the specified index.
+	// If no value exists for the data-pair at that index, the method returns the empty string ("").
 	// If the index is out of bounds, the method returns NULL.
 	// <p>
 	// <blockquote>
@@ -408,32 +409,32 @@ public:
 	//	{<br>
 	//	cout << parser->fieldnameAt(x) << "=" << parser->value(x) << "\n";<br>
 	// }<br>
-  	// <p><br>
+	// <p><br>
 	//=
 	const char *value(int index) const;
 
 	//=
-	// Returns the value of the data-pair identified by fieldname. 
-	// If more than one data-pair exists with the given name, then this returns the value of the first data-pair, 
-	// in essence, it is the same as calling {@link #value(constchar*,int) value(fieldname, 0)} (see below) . 
-	// If no value exists for the fieldname, or the fieldname is not a valid identifier, the method returns "". 
+	// Returns the value of the data-pair identified by fieldname.
+	// If more than one data-pair exists with the given name, then this returns the value of the first data-pair,
+	// in essence, it is the same as calling {@link #value(constchar*,int) value(fieldname, 0)} (see below) .
+	// If no value exists for the fieldname, or the fieldname is not a valid identifier, the method returns "".
 	// This method will never return NULL.
-	//= 
+	//=
 	const char *value(const char *fieldname) const;
 
 	//=
-	// Returns the <i><b>n</b>th</i> value of the data-pair identified by <i>fieldname</i>, where <b>n</b> is determined by <i>position</i>. 
+	// Returns the <i><b>n</b>th</i> value of the data-pair identified by <i>fieldname</i>, where <b>n</b> is determined by <i>position</i>.
 	// If no value exists for the fieldname at the given position, the method returns "". <br>
 	// If the fieldname is not a valid identifier, or the position is out of bounds, then the method returns NULL.
 	//<p>
-	//  
-   // <b>Example: </b> print out selected categories (from a form with checkboxes named "cat")
+	//
+	// <b>Example: </b> print out selected categories (from a form with checkboxes named "cat")
 	// <p>
 	// <pre><code>
 	// cout  << "Selected Categories :\n";
-	// int x=0; 
+	// int x=0;
 	// const char *category;
-	// while(category = parser->value("cat", x)) // will fail after last position 
+	// while(category = parser->value("cat", x)) // will fail after last position
 	// {
 	// 	cout << category << "\n";
 	//		x++;
@@ -458,12 +459,12 @@ public:
 	int length(const char *fieldname) const;
 
 	//=
-	// Returns the length of the <i>nth</i> data member identified by <i>fieldname</i>.  
+	// Returns the length of the <i>nth</i> data member identified by <i>fieldname</i>.
 	// @see #length(int)
-	//=	
+	//=
 	int length(const char *fieldname, int position) const;
 	//=
-	// Returns the MIME content-type of the data identified at <i>index</i> within the collection. 
+	// Returns the MIME content-type of the data identified at <i>index</i> within the collection.
 	// If the data is not an uploaded file, then the content-type defaults to application/x-formdata
 	//=
 	const char *contenttype(int index) const;
@@ -474,13 +475,13 @@ public:
 	const char *contenttype(const char *fieldname) const;
 
 	//=
-	// Returns the MIME content-type of the <i>nth</i> data member identified by <i>fieldname</i>.  
+	// Returns the MIME content-type of the <i>nth</i> data member identified by <i>fieldname</i>.
 	// @see #contenttype(int)
-	//=	
+	//=
 	const char *contenttype(const char *fieldname, int position) const;
 	//=
-	// Returns a safe filename for the uploaded file found at <i>index</i> within the entire collection. It determines the name either by parsing the filepath, or parsing the submitted filename. 
-	// Spaces are converted to underscores, and illegal file characters (based on windows systems) are removed. 
+	// Returns a safe filename for the uploaded file found at <i>index</i> within the entire collection. It determines the name either by parsing the filepath, or parsing the submitted filename.
+	// Spaces are converted to underscores, and illegal file characters (based on windows systems) are removed.
 	// The filename is also truncated to an acceptable length.
 	//=
 	const char *filename(int index) const;
@@ -490,7 +491,7 @@ public:
 	//=
 	const char *filename(const char *fieldname) const;
 	//=
-	// Returns a safe filename for the <i>nth</i> uploaded file identified by <i>fieldname</i>.  
+	// Returns a safe filename for the <i>nth</i> uploaded file identified by <i>fieldname</i>.
 	// @see #filename(int)
 	//=
 	const char *filename(const char *fieldname, int position) const;
@@ -513,14 +514,10 @@ public:
 	const char *filepath(const char *fieldname, int position) const;
 
 	virtual ~CGI();
-
-
 };
 
 
-std::ostream& operator<<(std::ostream& os, const CGI& parser);
+std::ostream &operator<<(std::ostream &os, const CGI &parser);
 
 } // end namespace rude
 #endif
-
-

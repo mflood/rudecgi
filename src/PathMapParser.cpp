@@ -9,12 +9,12 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -42,8 +42,10 @@
 #define INCLUDED_STRING_H
 #endif
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 // NOTE: the original buffer gets mangled!!!
 //
 bool PathMapParser::parse(DataRepos *repository, char *buffer, int length)
@@ -59,8 +61,8 @@ bool PathMapParser::parse(DataRepos *repository, char *buffer, int length)
 
 		// get the first token, the paths are set up as /token1/token2/token3/ etc...
 		//
-		char *key=strtok(buffer, "/");
-		
+		char *key = strtok(buffer, "/");
+
 		if(numpathmaps)
 		{
 			// if the token does not match "default" (or whatever default name is)
@@ -71,30 +73,31 @@ bool PathMapParser::parse(DataRepos *repository, char *buffer, int length)
 				//
 				const char *fieldname = map->getNameAt(pathsprocessed);
 				AbstractParser::unescape(key);
-				PathData *newData=new PathData(fieldname, key);
+				PathData *newData = new PathData(fieldname, key);
 				repository->addDataObject(newData);
 			}
 			pathsprocessed++;
 		}
-	
+
 		// get more tokens
 		//
-		while((key=strtok(NULL, "/"))!=NULL && pathsprocessed > numpathmaps)
+		while((key = strtok(NULL, "/")) != NULL && pathsprocessed > numpathmaps)
 		{
-				if(strcmp(key, map->getVoidName())!=0)
-				{
-					const char *fieldname = map->getNameAt(pathsprocessed);
-					AbstractParser::unescape(key);
-					PathData *newData=new PathData(fieldname, key);
-					repository->addDataObject(newData);
-				}
-				pathsprocessed++;
+			if(strcmp(key, map->getVoidName()) != 0)
+			{
+				const char *fieldname = map->getNameAt(pathsprocessed);
+				AbstractParser::unescape(key);
+				PathData *newData = new PathData(fieldname, key);
+				repository->addDataObject(newData);
+			}
+			pathsprocessed++;
 		}
 	}
 	return true;
 }
 
-}}
+} // namespace cgiparser
+} // namespace rude
 
 // $Log: PathMapParser.cpp,v $
 // Revision 1.4  2003/06/22 23:44:34  cvs

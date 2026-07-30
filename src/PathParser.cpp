@@ -9,18 +9,17 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 // 02111-1307, USA.
 //------------------------------------------------------------------------
-
 
 
 
@@ -44,8 +43,10 @@
 #define INCLUDED_CTYPE_H
 #endif
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 
 char PathParser::s_delimiter = '=';
 
@@ -62,26 +63,26 @@ void PathParser::addField(DataRepos *repository, const char *fieldstuff)
 	{
 		return;
 	}
-	
-	int len=strlen(fieldstuff);
-	if(len==0)
+
+	int len = strlen(fieldstuff);
+	if(len == 0)
 	{
 		return;
 	}
-	char *buffer=new char[len+1];
+	char *buffer = new char[len + 1];
 	strcpy(buffer, fieldstuff);
-	
-	char *value=strchr(buffer, s_delimiter);
+
+	char *value = strchr(buffer, s_delimiter);
 	if(value)
 	{
-		*value=(char)NULL;
+		*value = (char) NULL;
 		AbstractParser::unescape(++value);
 	}
 	AbstractParser::unescape(buffer);
-	
-	PathData *newData=new PathData(buffer, value);
+
+	PathData *newData = new PathData(buffer, value);
 	repository->addDataObject(newData);
-	delete []buffer;
+	delete[] buffer;
 }
 
 
@@ -97,7 +98,7 @@ bool PathParser::parse(DataRepos *repository, char *buffer, int length)
 		// we have a length of at least 1, so this will always return something
 		//
 
-		char *key=strtok(buffer, "/");
+		char *key = strtok(buffer, "/");
 
 		if(key)
 		{
@@ -105,14 +106,14 @@ bool PathParser::parse(DataRepos *repository, char *buffer, int length)
 
 			// get more tokens
 			//
-			while((key=strtok(NULL, "/"))!=NULL)
+			while((key = strtok(NULL, "/")) != NULL)
 			{
-					addField(repository, key);
+				addField(repository, key);
 			}
 		}
 	}
 	return true;
 }
 
-}} // end namespaces
-
+} // namespace cgiparser
+} // namespace rude

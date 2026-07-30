@@ -9,12 +9,12 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -29,24 +29,27 @@
 #ifndef INCLUDED_AbstractImplementation_H
 #include "AbstractImplementation.h"
 #endif
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 
 
 class ClientData;
-class Implementation: public AbstractImplementation{
+class Implementation : public AbstractImplementation
+{
 
 	ClientData *d_clientdata;
-	
-public:
+
+  public:
 	Implementation();
 	~Implementation();
 
 	void setCaseSensitive(bool isCaseSenstive);
-	
+
 	int numValues() const;
 	int numValues(const char *fieldname) const;
-	
+
 	const char *fieldnameAt(int position) const;
 	bool exists(const char *fieldname) const;
 
@@ -65,7 +68,7 @@ public:
 	int length(int index) const;
 	int length(const char *fieldname) const;
 	int length(const char *fieldname, int position) const;
-	
+
 	const char *contenttype(int index) const;
 	const char *contenttype(const char *fieldname) const;
 	const char *contenttype(const char *fieldname, int position) const;
@@ -73,12 +76,11 @@ public:
 	const char *filename(int index) const;
 	const char *filename(const char *fieldname) const;
 	const char *filename(const char *fieldname, int position) const;
-	
+
 	const char *filepath(int index) const;
 	const char *filepath(const char *fieldname) const;
 	const char *filepath(const char *fieldname, int position) const;
-
 };
-}}
+} // namespace cgiparser
+} // namespace rude
 #endif
-

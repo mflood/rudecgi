@@ -25,30 +25,32 @@
 
 int main()
 {
-    rude::CGI cgi; // reads REQUEST_METHOD, QUERY_STRING, stdin, cookies...
+	rude::CGI cgi; // reads REQUEST_METHOD, QUERY_STRING, stdin, cookies...
 
-    // A real CGI response starts with a header block.
-    std::cout << "Content-type: text/plain\r\n\r\n";
+	// A real CGI response starts with a header block.
+	std::cout << "Content-type: text/plain\r\n\r\n";
 
-    // Look up a single field (returns "" if it wasn't sent).
-    std::cout << "Hello, "
-              << (cgi.exists("name") ? cgi.value("name") : "stranger")
-              << "!\n\n";
+	// Look up a single field (returns "" if it wasn't sent).
+	std::cout << "Hello, "
+			  << (cgi.exists("name") ? cgi.value("name") : "stranger")
+			  << "!\n\n";
 
-    // Enumerate every field that was sent, with its origin.
-    int total = cgi.numValues();
-    std::cout << total << " field(s) received:\n";
-    for (int i = 0; i < total; i++) {
-        std::cout << "  " << cgi.fieldnameAt(i)
-                  << " = " << cgi.value(i)
-                  << "   (from " << cgi.datasource(i) << ")\n";
-    }
+	// Enumerate every field that was sent, with its origin.
+	int total = cgi.numValues();
+	std::cout << total << " field(s) received:\n";
+	for(int i = 0; i < total; i++)
+	{
+		std::cout << "  " << cgi.fieldnameAt(i)
+				  << " = " << cgi.value(i)
+				  << "   (from " << cgi.datasource(i) << ")\n";
+	}
 
-    // Repeated fields (e.g. checkbox groups) keep every value.
-    int colors = cgi.numValues("color");
-    for (int i = 0; i < colors; i++) {
-        std::cout << "color #" << i << ": " << cgi.value("color", i) << "\n";
-    }
+	// Repeated fields (e.g. checkbox groups) keep every value.
+	int colors = cgi.numValues("color");
+	for(int i = 0; i < colors; i++)
+	{
+		std::cout << "color #" << i << ": " << cgi.value("color", i) << "\n";
+	}
 
-    return 0;
+	return 0;
 }

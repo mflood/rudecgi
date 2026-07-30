@@ -9,12 +9,12 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -49,13 +49,14 @@
 
 using namespace rude::cgiparser;
 
-namespace rude{
-
-std::ostream& operator<<(std::ostream& os, const CGI& parser)
+namespace rude
 {
-	int total=parser.numValues();
 
-	for(int x=0; x< total; x++)
+std::ostream &operator<<(std::ostream &os, const CGI &parser)
+{
+	int total = parser.numValues();
+
+	for(int x = 0; x < total; x++)
 	{
 		os << parser.fieldnameAt(x) << "=" << parser.value(x) << "\n";
 	}
@@ -63,7 +64,7 @@ std::ostream& operator<<(std::ostream& os, const CGI& parser)
 }
 
 
-AbstractImplementation *CGI::s_implementation=0;
+AbstractImplementation *CGI::s_implementation = 0;
 
 const char *CGI::version()
 {
@@ -73,7 +74,7 @@ const char *CGI::version()
 	//
 	return "RudeServer CGI Version " RUDECGI_VERSION_STRING;
 }
-	
+
 
 CGI::CGI()
 {
@@ -100,11 +101,11 @@ void CGI::maxPostLength(long bytes)
 {
 	if(bytes > 0)
 	{
-		POSTExtractor::MAXPOSTLENGTH=bytes;
+		POSTExtractor::MAXPOSTLENGTH = bytes;
 	}
 	else
 	{
-		POSTExtractor::MAXPOSTLENGTH=0;
+		POSTExtractor::MAXPOSTLENGTH = 0;
 	}
 }
 
@@ -112,11 +113,11 @@ void CGI::maxPostReadSeconds(long seconds)
 {
 	if(seconds > 0)
 	{
-		POSTExtractor::MAXPOSTREADSECONDS=seconds;
+		POSTExtractor::MAXPOSTREADSECONDS = seconds;
 	}
 	else
 	{
-		POSTExtractor::MAXPOSTREADSECONDS=0;
+		POSTExtractor::MAXPOSTREADSECONDS = 0;
 	}
 }
 
@@ -145,12 +146,12 @@ void CGI::setCaseSensitive(bool isCaseSenstive)
 	}
 }
 
-const char *CGI::value( const char *fieldname) const
+const char *CGI::value(const char *fieldname) const
 {
 	return s_implementation ? s_implementation->value(fieldname) : "";
 }
-	
-bool CGI::exists( const char *fieldname) const
+
+bool CGI::exists(const char *fieldname) const
 {
 	return s_implementation ? s_implementation->exists(fieldname) : false;
 }
@@ -162,14 +163,14 @@ bool CGI::isFile(const char *fieldname) const
 
 bool CGI::isFile(const char *fieldname, int position) const
 {
-	return s_implementation ? s_implementation->isFile(fieldname, position): false;
+	return s_implementation ? s_implementation->isFile(fieldname, position) : false;
 }
 
 int CGI::numValues() const
 {
-	return s_implementation ? s_implementation->numValues(): 0;
+	return s_implementation ? s_implementation->numValues() : 0;
 }
-	
+
 int CGI::numValues(const char *fieldname) const
 {
 	return s_implementation ? s_implementation->numValues(fieldname) : 0;
@@ -177,22 +178,22 @@ int CGI::numValues(const char *fieldname) const
 
 const char *CGI::fieldnameAt(int position) const
 {
-	return s_implementation ? s_implementation->fieldnameAt(position): "";
+	return s_implementation ? s_implementation->fieldnameAt(position) : "";
 }
 
 
-const char * CGI::operator [] (const char * fieldname)
+const char *CGI::operator[](const char *fieldname)
 {
-		return s_implementation ? s_implementation->value(fieldname, 0): "";
+	return s_implementation ? s_implementation->value(fieldname, 0) : "";
 }
 
-const char * CGI::operator [] (int x)
+const char *CGI::operator[](int x)
 {
 	return s_implementation ? s_implementation->fieldnameAt(x) : "";
 }
 
 
-const char * CGI::value(const char *fieldname, int position) const
+const char *CGI::value(const char *fieldname, int position) const
 {
 	return s_implementation ? s_implementation->value(fieldname, position) : "";
 }
@@ -204,27 +205,27 @@ int CGI::length(const char *fieldname) const
 
 int CGI::length(const char *fieldname, int position) const
 {
-	return s_implementation ? s_implementation->length(fieldname, position): 0;
+	return s_implementation ? s_implementation->length(fieldname, position) : 0;
 }
 
 const char *CGI::contenttype(const char *fieldname) const
 {
-	return s_implementation ? s_implementation->contenttype(fieldname): "";
+	return s_implementation ? s_implementation->contenttype(fieldname) : "";
 }
 
 const char *CGI::contenttype(const char *fieldname, int position) const
 {
-	return s_implementation ? s_implementation->contenttype(fieldname, position): "";
+	return s_implementation ? s_implementation->contenttype(fieldname, position) : "";
 }
 
 const char *CGI::filename(const char *fieldname) const
 {
-	return s_implementation ? s_implementation->filename(fieldname): "";
+	return s_implementation ? s_implementation->filename(fieldname) : "";
 }
 
 const char *CGI::filename(const char *fieldname, int position) const
 {
-	return s_implementation ? s_implementation->filename(fieldname, position): "";
+	return s_implementation ? s_implementation->filename(fieldname, position) : "";
 }
 
 const char *CGI::filepath(const char *fieldname) const
@@ -240,27 +241,26 @@ const char *CGI::filepath(const char *fieldname, int position) const
 void CGI::finish()
 {
 	AbstractImplementation::finish();
-	s_implementation=0;
+	s_implementation = 0;
 }
 
 CGI::~CGI()
 {
-	
 }
 
 const char *CGI::datasource(int position) const
 {
-	return s_implementation ? s_implementation->datasource(position): "";
+	return s_implementation ? s_implementation->datasource(position) : "";
 }
 
 const char *CGI::datasource(const char *fieldname) const
 {
-	return s_implementation ? s_implementation->datasource(fieldname): "";
+	return s_implementation ? s_implementation->datasource(fieldname) : "";
 }
 
 const char *CGI::datasource(const char *fieldname, int position) const
 {
-	return s_implementation ? s_implementation->datasource(fieldname, position): "";
+	return s_implementation ? s_implementation->datasource(fieldname, position) : "";
 }
 
 bool CGI::isFile(int index) const
@@ -290,9 +290,7 @@ const char *CGI::filename(int index) const
 
 const char *CGI::filepath(int index) const
 {
-	return s_implementation ? s_implementation->filepath(index): "";
+	return s_implementation ? s_implementation->filepath(index) : "";
 }
 
 } // end namespace rude
-
-

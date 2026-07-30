@@ -9,12 +9,12 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -35,11 +35,13 @@
 #define INCLUDED_CTYPE_H
 #endif
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 const char *FileData::s_defaultcontenttype = "application/octet-stream";
 
-int FileData::s_maxfilename=100;
+int FileData::s_maxfilename = 100;
 
 void FileData::setDefaultContentType(const char *contenttype)
 {
@@ -54,23 +56,23 @@ FileData::FileData()
 {
 	d_length = 0;
 	d_value = 0;
-	
-	d_name="";
-	d_contenttype="";
-	d_filename="";
-	d_filepath="";
+
+	d_name = "";
+	d_contenttype = "";
+	d_filename = "";
+	d_filepath = "";
 }
-	
+
 FileData::~FileData()
 {
-	delete [] d_value;
+	delete[] d_value;
 }
 
 const char *FileData::getFieldName() const
 {
 	return d_name.c_str();
 }
-	
+
 const char *FileData::getValue() const
 {
 	if(d_value)
@@ -79,7 +81,7 @@ const char *FileData::getValue() const
 	}
 	return "";
 }
-		
+
 int FileData::getLength() const
 {
 	return d_length;
@@ -89,12 +91,12 @@ const char *FileData::getFilepath() const
 {
 	return d_filepath.c_str();
 }
-	
+
 const char *FileData::getFilename() const
 {
 	return d_filename.c_str();
 }
-	
+
 const char *FileData::getContentType() const
 {
 	if(d_contenttype != "")
@@ -106,26 +108,27 @@ const char *FileData::getContentType() const
 
 void FileData::setFieldName(const char *name)
 {
-	d_name = name? name: "";
+	d_name = name ? name : "";
 }
-	
+
 void FileData::setValue(const char *value, int length)
 {
 	char *newvalue = 0;
 	d_length = 0;
 	if(value)
-	{	d_length = length;
-		newvalue = new char[length+1];
-		for(int x=0; x< length; x++)
+	{
+		d_length = length;
+		newvalue = new char[length + 1];
+		for(int x = 0; x < length; x++)
 		{
 			newvalue[x] = value[x];
 		}
 		newvalue[length] = 0;
 	}
-	delete [] d_value;
+	delete[] d_value;
 	d_value = newvalue;
 }
-	
+
 void FileData::setFilepath(const char *path)
 {
 	if(path)
@@ -141,7 +144,7 @@ void FileData::setFilepath(const char *path)
 		d_filepath = "";
 	}
 }
-	
+
 void FileData::setFilename(const char *name)
 {
 	// eliminate illegal characters
@@ -174,7 +177,7 @@ void FileData::setFilename(const char *name)
 			{
 				// found backward slash
 				begin++;
-				length=strlen(begin);
+				length = strlen(begin);
 			}
 			else
 			{
@@ -183,10 +186,10 @@ void FileData::setFilename(const char *name)
 			}
 		}
 
-			
+
 		int x = 0;
 		char *ptr = newname;
-		
+
 		// keep the filename down to the right length
 		//
 		if(s_maxfilename && length > s_maxfilename)
@@ -195,26 +198,26 @@ void FileData::setFilename(const char *name)
 			//
 			x += length - s_maxfilename;
 		}
-			
-		for(; x < length ; x++)
+
+		for(; x < length; x++)
 		{
 			// keep regular characters
 			//
-			if(isalnum((unsigned char)begin[x]) || begin[x] == '.')
+			if(isalnum((unsigned char) begin[x]) || begin[x] == '.')
 			{
 				*ptr = begin[x];
 				ptr++;
 			}
 			else if(begin[x] == ' ')
 			{
-					// spaces become underscores
-					//
-					*ptr = '_';
-					ptr++;
+				// spaces become underscores
+				//
+				*ptr = '_';
+				ptr++;
 			}
 			// everything else is ignored
 		}
-			
+
 		// NULL terminate the newname
 		//
 		*ptr = 0;
@@ -225,7 +228,7 @@ void FileData::setFilename(const char *name)
 
 		// reap memory
 		//
-		delete [] newname;
+		delete[] newname;
 	}
 	else
 	{
@@ -240,8 +243,8 @@ const char *FileData::datasource() const
 
 void FileData::setContentType(const char *contenttype)
 {
-	d_contenttype = contenttype? contenttype: "";
+	d_contenttype = contenttype ? contenttype : "";
 }
 
-}} // end namespaces
-
+} // namespace cgiparser
+} // namespace rude

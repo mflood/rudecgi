@@ -9,18 +9,17 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 // 02111-1307, USA.
 //------------------------------------------------------------------------
-
 
 
 
@@ -94,11 +93,13 @@
 
 #include <fcntl.h>
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 
-long POSTExtractor::MAXPOSTLENGTH=0;
-long POSTExtractor::MAXPOSTREADSECONDS=0;
+long POSTExtractor::MAXPOSTLENGTH = 0;
+long POSTExtractor::MAXPOSTREADSECONDS = 0;
 
 POSTExtractor::POSTExtractor(AbstractParserFactory *factory)
 {
@@ -133,8 +134,7 @@ static size_t readRequestBody(char *buffer, long length, long timeoutsecs)
 		if(fd >= 0)
 		{
 			std::chrono::steady_clock::time_point deadline =
-				std::chrono::steady_clock::now()
-				+ std::chrono::seconds(timeoutsecs);
+				std::chrono::steady_clock::now() + std::chrono::seconds(timeoutsecs);
 
 			size_t total = 0;
 			while(total < (size_t) length)
@@ -149,7 +149,8 @@ static size_t readRequestBody(char *buffer, long length, long timeoutsecs)
 				}
 
 				long usecs = (long) std::chrono::duration_cast<
-					std::chrono::microseconds>(left).count();
+								 std::chrono::microseconds>(left)
+								 .count();
 				struct timeval tv;
 				tv.tv_sec = usecs / 1000000;
 				tv.tv_usec = usecs % 1000000;
@@ -158,7 +159,7 @@ static size_t readRequestBody(char *buffer, long length, long timeoutsecs)
 				FD_ZERO(&fds);
 				FD_SET(fd, &fds);
 
-				int rc = select(fd + 1, &fds, (fd_set*) 0, (fd_set*) 0, &tv);
+				int rc = select(fd + 1, &fds, (fd_set *) 0, (fd_set *) 0, &tv);
 				if(rc <= 0)
 				{
 					// Timed out, or the descriptor went bad.
@@ -219,8 +220,7 @@ ClientData *POSTExtractor::extract()
 		// Reject trailing garbage, overflow and negative lengths rather
 		// than silently treating them as some other number.
 		//
-		if(endptr != contentlength && *endptr == 0 && errno != ERANGE
-		   && parsed > 0 && parsed <= (long) INT_MAX)
+		if(endptr != contentlength && *endptr == 0 && errno != ERANGE && parsed > 0 && parsed <= (long) INT_MAX)
 		{
 			length = parsed;
 		}
@@ -252,7 +252,7 @@ ClientData *POSTExtractor::extract()
 		// nothrow: an unbounded CONTENT_LENGTH must not turn into a
 		// std::bad_alloc that terminates the whole CGI process.
 		//
-		char *buffer = new (std::nothrow) char[length + 1]();
+		char *buffer = new(std::nothrow) char[length + 1]();
 		if(!buffer)
 		{
 			delete parser;
@@ -261,12 +261,12 @@ ClientData *POSTExtractor::extract()
 		}
 
 #ifdef WIN32
-		int result = setmode( fileno( stdin ), O_BINARY );
+		int result = setmode(fileno(stdin), O_BINARY);
 		if(result != -1)
 #else
 		int stdin_fd = fileno(stdin);
-		//fclose(stdin);
-		stdin = fdopen(stdin_fd, "rb"); 
+		// fclose(stdin);
+		stdin = fdopen(stdin_fd, "rb");
 		if(stdin)
 #endif
 		{
@@ -279,7 +279,7 @@ ClientData *POSTExtractor::extract()
 			size_t bytesread = readRequestBody(buffer, length, MAXPOSTREADSECONDS);
 			length = (long) bytesread;
 			buffer[length] = (char) 0;
-			
+
 			// if content was encoded (eg. base64 / quoted-print / gzip) it would bedecoded now
 			/////////////
 
@@ -287,7 +287,6 @@ ClientData *POSTExtractor::extract()
 			// parse the data, add it to repository
 			//
 			parser->parse(repository, buffer, (int) length);
-
 		}
 		else
 		{
@@ -299,7 +298,7 @@ ClientData *POSTExtractor::extract()
 		// free unused objects
 		//
 		delete parser;
-		delete [] buffer;
+		delete[] buffer;
 	}
 
 	// Cookies last, so form data wins a name collision on POST just as
@@ -310,5 +309,5 @@ ClientData *POSTExtractor::extract()
 	return repository;
 }
 
-}} // end namespaces
-
+} // namespace cgiparser
+} // namespace rude

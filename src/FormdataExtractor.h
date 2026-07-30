@@ -9,12 +9,12 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -23,29 +23,28 @@
 
 
 
-
 #ifndef INCLUDED_FormdataExtractor_H
 #define INCLUDED_FormdataExtractor_H
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 
 class ClientData;
 
-class FormdataExtractor{
+class FormdataExtractor
+{
 
-protected:
+  protected:
+	FormdataExtractor();
 
-	FormdataExtractor();	
-
-public:
-
+  public:
 	virtual ClientData *extract() = 0;
 	virtual ~FormdataExtractor();
-
 };
 
-}} // end namespaces
+} // namespace cgiparser
+} // namespace rude
 
 #endif
-
