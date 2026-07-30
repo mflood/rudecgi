@@ -60,13 +60,13 @@ bool CaselessMatch::compare(const char *string1, const char *string2) const
                {
                                 char a=string1[x];
                                 char b=string2[x];
-                                if(isupper(a))
+                                if(isupper((unsigned char)a))
                                 {
-                                        a=tolower(a);
+                                        a=(char)tolower((unsigned char)a);
                                 }
-                                if(isupper(b))
+                                if(isupper((unsigned char)b))
                                 {
-                                        b=tolower(b);
+                                        b=(char)tolower((unsigned char)b);
                                 }
                                 if(a < b)
                                 {

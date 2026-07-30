@@ -26,3 +26,8 @@
 *.exe
 *.out
 *.app
+
+# CMake build trees and local installs
+build/
+build-*/
+local-install/

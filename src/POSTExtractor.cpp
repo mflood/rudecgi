@@ -130,7 +130,8 @@ ClientData *POSTExtractor::extract()
 		{
 			// parse the data, add it to repository
 			//
-			parser->parse(repository, "searchfor=binaryerror", strlen("searchfor=binaryerror"));
+			char errormessage[] = "searchfor=binaryerror";
+			parser->parse(repository, errormessage, strlen(errormessage));
 		}
 		// free unused objects
 		//
