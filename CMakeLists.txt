@@ -103,13 +103,27 @@ install(FILES
 # The .pc file must not bake in the configure-time CMAKE_INSTALL_PREFIX: that
 # breaks "cmake --install --prefix <dir>", which is what the README teaches.
 # Express prefix relative to ${pcfiledir} instead, so the file stays correct
-# wherever it lands.  Falls back to the absolute prefix if the caller has set
-# an absolute CMAKE_INSTALL_LIBDIR, where a relative path is not meaningful.
+# wherever it lands.  Walk back up one "../" per component of
+# <libdir>/pkgconfig -- computed by hand rather than with file(RELATIVE_PATH),
+# which requires absolute arguments and rejects "/" as a root on Windows.
+# Falls back to the absolute prefix if the caller set an absolute
+# CMAKE_INSTALL_LIBDIR, where a relative path is not meaningful.
 if(IS_ABSOLUTE "${CMAKE_INSTALL_LIBDIR}")
     set(RUDECGI_PC_PREFIX "${CMAKE_INSTALL_PREFIX}")
 else()
-    file(RELATIVE_PATH RUDECGI_PC_REL_PREFIX
-        "/${CMAKE_INSTALL_LIBDIR}/pkgconfig" "/")
+    file(TO_CMAKE_PATH "${CMAKE_INSTALL_LIBDIR}/pkgconfig" RUDECGI_PC_SUBDIR)
+    string(REGEX REPLACE "/+" "/" RUDECGI_PC_SUBDIR "${RUDECGI_PC_SUBDIR}")
+    string(REGEX REPLACE "^/+|/+$" "" RUDECGI_PC_SUBDIR "${RUDECGI_PC_SUBDIR}")
+    string(REPLACE "/" ";" RUDECGI_PC_PARTS "${RUDECGI_PC_SUBDIR}")
+    set(RUDECGI_PC_REL_PREFIX "")
+    foreach(part IN LISTS RUDECGI_PC_PARTS)
+        if(NOT part STREQUAL "" AND NOT part STREQUAL ".")
+            string(APPEND RUDECGI_PC_REL_PREFIX "../")
+        endif()
+    endforeach()
+    if(RUDECGI_PC_REL_PREFIX STREQUAL "")
+        set(RUDECGI_PC_REL_PREFIX "./")
+    endif()
     set(RUDECGI_PC_PREFIX "\${pcfiledir}/${RUDECGI_PC_REL_PREFIX}")
 endif()
 
