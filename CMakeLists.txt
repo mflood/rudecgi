@@ -1,13 +1,28 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(rudecgi
-    VERSION 5.2.0
+    VERSION 5.3.0
     DESCRIPTION "C++ library for parsing CGI form data, cookies, and file uploads"
     HOMEPAGE_URL "https://github.com/mflood/rudecgi"
     LANGUAGES CXX)
 
+# PROJECT_IS_TOP_LEVEL is CMake 3.21+; this project still supports 3.16, and
+# an undefined variable would read as false and silently drop the tests.
+if(NOT DEFINED PROJECT_IS_TOP_LEVEL)
+    if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+        set(PROJECT_IS_TOP_LEVEL TRUE)
+    else()
+        set(PROJECT_IS_TOP_LEVEL FALSE)
+    endif()
+endif()
+
 include(GNUInstallDirs)
-include(CTest)
+# Only offer tests and examples when this is the top-level project.
+# Without the guard, a FetchContent consumer inherits our demo and
+# test_* targets into their own build.
+if(PROJECT_IS_TOP_LEVEL)
+    include(CTest)
+endif()
 
 option(RUDECGI_BUILD_EXAMPLES "Build example programs" ON)
 
@@ -140,10 +155,10 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/rudecgi.pc"
 
 # ---- Tests & examples ----
 
-if(BUILD_TESTING)
+if(PROJECT_IS_TOP_LEVEL AND BUILD_TESTING)
     add_subdirectory(tests)
 endif()
 
-if(RUDECGI_BUILD_EXAMPLES)
+if(PROJECT_IS_TOP_LEVEL AND RUDECGI_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()

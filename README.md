@@ -83,7 +83,7 @@ Or vendor it with `FetchContent`:
 include(FetchContent)
 FetchContent_Declare(rudecgi
     GIT_REPOSITORY https://github.com/mflood/rudecgi
-    GIT_TAG master)
+    GIT_TAG v5.2.0)
 FetchContent_MakeAvailable(rudecgi)
 target_link_libraries(myapp PRIVATE rudecgi::rudecgi)
 ```
