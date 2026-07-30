@@ -25,6 +25,8 @@
 
 #include "cgi.h"
 
+#include "rudecgi_version.h"
+
 #ifndef INCLUDED_AbstractImplementation_H
 #include "AbstractImplementation.h"
 #endif
@@ -65,7 +67,11 @@ AbstractImplementation *CGI::s_implementation=0;
 
 const char *CGI::version()
 {
-	return "RudeServer CGI Version 3.0";
+	// Generated from the project version at build time.  This used to be
+	// a hardcoded "RudeServer CGI Version 3.0", which had not tracked a
+	// release since before 4.0.
+	//
+	return "RudeServer CGI Version " RUDECGI_VERSION_STRING;
 }
 	
 

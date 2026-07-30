@@ -49,6 +49,13 @@ add_library(rudecgi::rudecgi ALIAS rudecgi)
 
 target_compile_features(rudecgi PUBLIC cxx_std_17)
 
+# Single source of truth for the version reported by CGI::version().
+# Generated rather than hardcoded so it cannot drift from the project version
+# the way the old "3.0" string did.
+configure_file(src/rudecgi_version.h.in
+    "${CMAKE_CURRENT_BINARY_DIR}/internal/rudecgi_version.h" @ONLY)
+target_include_directories(rudecgi PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/internal")
+
 # Public header is consumed as <rude/cgi.h>; stage it under that path
 # so in-tree consumers see the same layout as installed ones.
 configure_file(src/cgi.h "${CMAKE_CURRENT_BINARY_DIR}/include/rude/cgi.h" COPYONLY)
