@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 project(rudecgi
-    VERSION 5.1.1
+    VERSION 5.2.0
     DESCRIPTION "C++ library for parsing CGI form data, cookies, and file uploads"
     HOMEPAGE_URL "https://github.com/mflood/rudecgi"
     LANGUAGES CXX)

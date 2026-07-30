@@ -4,6 +4,24 @@ See the end for copying conditions.
 
 
 __________________________________________________________________________________
+Release 5.2.0 - Matthew Flood 2026-07-30
+
+	- BEHAVIOR CHANGE: cookies are now parsed after form data on POST
+	  requests, as they already were on GET.  Cookies and form fields
+	  share one lookup namespace, and the old order let a client-supplied
+	  cookie shadow a POST field at every unindexed value() call.  Both
+	  values are still present and reachable by index, and datasource()
+	  still reports the origin of each; only the unindexed lookup changes,
+	  and only on POST.
+	- New CGI::maxPostReadSeconds(long) bounds how long reading the POST
+	  body will wait.  A client that over-declares CONTENT_LENGTH and then
+	  holds the connection open used to pin the process indefinitely,
+	  because fread() blocks until it has the full count or reaches EOF.
+	  The default is unchanged (wait indefinitely); whatever arrives
+	  within the limit is parsed.  POSIX only - on Windows the limit is
+	  ignored, since select() there does not apply to pipes.
+
+__________________________________________________________________________________
 Release 5.1.1 - Matthew Flood 2026-07-30
 
 	- SECURITY: fixed disclosure of uninitialised heap memory through

@@ -72,6 +72,22 @@
 #define INCLUDED_NEW_H
 #endif
 
+#ifndef INCLUDED_CHRONO
+#include <chrono>
+#define INCLUDED_CHRONO
+#endif
+
+#ifndef WIN32
+#ifndef INCLUDED_SYS_SELECT_H
+#include <sys/select.h>
+#define INCLUDED_SYS_SELECT_H
+#endif
+#ifndef INCLUDED_UNISTD_H
+#include <unistd.h>
+#define INCLUDED_UNISTD_H
+#endif
+#endif
+
 #ifdef WIN32
 #include <io.h>
 #endif
@@ -82,6 +98,7 @@ namespace rude{
 namespace cgiparser{
 
 long POSTExtractor::MAXPOSTLENGTH=0;
+long POSTExtractor::MAXPOSTREADSECONDS=0;
 
 POSTExtractor::POSTExtractor(AbstractParserFactory *factory)
 {
@@ -91,6 +108,81 @@ POSTExtractor::POSTExtractor(AbstractParserFactory *factory)
 POSTExtractor::~POSTExtractor()
 {
 	delete d_factory;
+}
+
+//
+// Reads up to 'length' bytes of request body.
+//
+// With no timeout configured this is a plain fread(), matching the
+// historical behaviour.  With one, stdio is bypassed in favour of the raw
+// descriptor so that select() can bound the wait: fread() blocks until it
+// has the full count or hits EOF, so a client that over-declares
+// CONTENT_LENGTH and then holds the connection open pins the CGI process
+// indefinitely.  Nothing has been read from stdin before this point, so
+// switching to read() here cannot strand buffered data.
+//
+// select() on a pipe is POSIX; on Windows it only works for sockets, so the
+// timeout is ignored there and the read stays a plain fread().
+//
+static size_t readRequestBody(char *buffer, long length, long timeoutsecs)
+{
+#ifndef WIN32
+	if(timeoutsecs > 0)
+	{
+		int fd = fileno(stdin);
+		if(fd >= 0)
+		{
+			std::chrono::steady_clock::time_point deadline =
+				std::chrono::steady_clock::now()
+				+ std::chrono::seconds(timeoutsecs);
+
+			size_t total = 0;
+			while(total < (size_t) length)
+			{
+				std::chrono::steady_clock::duration left =
+					deadline - std::chrono::steady_clock::now();
+				if(left.count() <= 0)
+				{
+					// Out of time: keep whatever arrived and parse that.
+					//
+					break;
+				}
+
+				long usecs = (long) std::chrono::duration_cast<
+					std::chrono::microseconds>(left).count();
+				struct timeval tv;
+				tv.tv_sec = usecs / 1000000;
+				tv.tv_usec = usecs % 1000000;
+
+				fd_set fds;
+				FD_ZERO(&fds);
+				FD_SET(fd, &fds);
+
+				int rc = select(fd + 1, &fds, (fd_set*) 0, (fd_set*) 0, &tv);
+				if(rc <= 0)
+				{
+					// Timed out, or the descriptor went bad.
+					//
+					break;
+				}
+
+				ssize_t got = read(fd, buffer + total, (size_t) length - total);
+				if(got <= 0)
+				{
+					// EOF, or an unrecoverable error.
+					//
+					break;
+				}
+				total += (size_t) got;
+			}
+			return total;
+		}
+	}
+#else
+	(void) timeoutsecs;
+#endif
+
+	return fread(buffer, sizeof(char), (size_t) length, stdin);
 }
 
 ClientData *POSTExtractor::extract()
@@ -184,7 +276,7 @@ ClientData *POSTExtractor::extract()
 			// heap contents - including the buffers GETExtractor just freed
 			// - to whoever sent the request.
 			//
-			size_t bytesread = fread(buffer, sizeof(char), (size_t) length, stdin);
+			size_t bytesread = readRequestBody(buffer, length, MAXPOSTREADSECONDS);
 			length = (long) bytesread;
 			buffer[length] = (char) 0;
 			
