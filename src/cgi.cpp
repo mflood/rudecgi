@@ -108,6 +108,18 @@ void CGI::maxPostLength(long bytes)
 	}
 }
 
+void CGI::maxPostReadSeconds(long seconds)
+{
+	if(seconds > 0)
+	{
+		POSTExtractor::MAXPOSTREADSECONDS=seconds;
+	}
+	else
+	{
+		POSTExtractor::MAXPOSTREADSECONDS=0;
+	}
+}
+
 void CGI::setPathDelimiter(char delimiter)
 {
 	PathParser::setDelimiter(delimiter);

@@ -54,6 +54,7 @@ class AbstractImplementation;
 // <li>{@link #addPathMapName CGI::addPathMapName(const char *pathname)}</li>
 // <li>{@link #setPathDelimiter CGI::setPathDelimiter(char)}</li>
 // <li>{@link #maxPostLength CGI::maxPostLength(int bytes)}</li>
+// <li>{@link #maxPostReadSeconds CGI::maxPostReadSeconds(long seconds)}</li>
 // </ul>
 //
 // 
@@ -264,6 +265,29 @@ public:
 	// @param bytes A value from 0 to the maximum positive signed long value.
 	//=
 	static void maxPostLength(long bytes);
+
+	//=
+	// Sets how long to wait for the POST body, in seconds.
+	// <p>
+	// By <b>default</b> there is no limit, and reading the body waits
+	// indefinitely.  That is safe when the web server sends exactly
+	// CONTENT_LENGTH bytes, but a client that over-declares CONTENT_LENGTH
+	// and then keeps the connection open will pin this process forever.
+	// Setting a limit bounds that wait; whatever arrived in time is parsed.
+	// <p>
+	// Pass 0 to restore the default of waiting indefinitely.
+	// <p>
+	// <b>Note:</b> POSIX only.  On Windows the limit is ignored, because
+	// select() there applies to sockets rather than to the pipe a CGI
+	// process is given for stdin.
+	// <p>
+	// <b>Example:</b>
+	// <p>
+	// <code>
+	// CGI::maxPostReadSeconds( 30 ); // give up on a stalled body after 30s
+	// </code>
+	//=
+	static void maxPostReadSeconds(long seconds);
 
 
 	//=

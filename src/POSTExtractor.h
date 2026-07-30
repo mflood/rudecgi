@@ -46,6 +46,12 @@ public:
 
 		static long MAXPOSTLENGTH;
 
+		// Seconds to wait for the POST body before giving up on it.
+		// 0 (the default) means wait indefinitely, which is the historical
+		// behaviour.  POSIX only; ignored on Windows.
+		//
+		static long MAXPOSTREADSECONDS;
+
 		POSTExtractor(AbstractParserFactory *factory);
 
 		ClientData *extract();
