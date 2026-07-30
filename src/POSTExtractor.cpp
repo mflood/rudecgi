@@ -98,8 +98,14 @@ ClientData *POSTExtractor::extract()
 	// First get query string data if there is any
 	// and get the repository that the getExtractor builds
 	//
+	// Cookies are deliberately left out here and applied at the end, after
+	// the POST body.  Parsing them up front put client-controlled cookies
+	// ahead of form fields in the shared namespace, so a cookie could
+	// shadow a POST field at any unindexed value() call - the opposite of
+	// what happens on a GET, where the query string is parsed first.
+	//
 	GETExtractor getExtractor;
-	DataRepos *repository = getExtractor.extractDataRepos();
+	DataRepos *repository = getExtractor.extractDataReposWithoutCookies();
 
 	// See if there is even any posted data.
 	//
@@ -158,6 +164,7 @@ ClientData *POSTExtractor::extract()
 		if(!buffer)
 		{
 			delete parser;
+			GETExtractor::parseCookiesInto(repository);
 			return repository;
 		}
 
@@ -202,6 +209,12 @@ ClientData *POSTExtractor::extract()
 		delete parser;
 		delete [] buffer;
 	}
+
+	// Cookies last, so form data wins a name collision on POST just as
+	// it does on GET.
+	//
+	GETExtractor::parseCookiesInto(repository);
+
 	return repository;
 }
 
