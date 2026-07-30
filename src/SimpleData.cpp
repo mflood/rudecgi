@@ -65,7 +65,11 @@ const char *SimpleData::getFilename() const
 
 const char *SimpleData::getContentType() const
 {
-	return "";
+	// cgi.h: "If the data is not an uploaded file, then the content-type
+	// defaults to application/x-formdata".  This returned "" instead, so
+	// the documented default appeared nowhere in the library.
+	//
+	return "application/x-formdata";
 }
 
 void SimpleData::setValue(const char *value)
