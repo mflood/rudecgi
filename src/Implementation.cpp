@@ -9,12 +9,12 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -47,12 +47,14 @@
 #define INCLUDED_STDLIB_H
 #endif
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 Implementation::Implementation()
 {
 	AbstractFactory *factory = new Factory();
-	
+
 	FormdataExtractor *extractor = factory->buildExtractor(getenv("REQUEST_METHOD"));
 
 	d_clientdata = extractor->extract();
@@ -69,7 +71,7 @@ Implementation::~Implementation()
 }
 
 
-void Implementation::setCaseSensitive(bool isCaseSenstive) 
+void Implementation::setCaseSensitive(bool isCaseSenstive)
 {
 	d_clientdata->setCaseSensitive(isCaseSenstive);
 }
@@ -78,43 +80,43 @@ int Implementation::numValues() const
 {
 	return d_clientdata->numTotal();
 }
-	
+
 int Implementation::numValues(const char *fieldname) const
 {
 	return d_clientdata->numValues(fieldname);
 }
-	
+
 const char *Implementation::fieldnameAt(int position) const
 {
 	return d_clientdata->fieldAt(position);
 }
-	
+
 bool Implementation::exists(const char *fieldname) const
 {
 	return d_clientdata->exists(fieldname);
 }
-	
+
 bool Implementation::isFile(const char *fieldname) const
 {
-	return (d_clientdata->filename(fieldname,0) != 0 && d_clientdata->filename(fieldname,0)[0] != 0);
+	return (d_clientdata->filename(fieldname, 0) != 0 && d_clientdata->filename(fieldname, 0)[0] != 0);
 }
 
 bool Implementation::isFile(const char *fieldname, int position) const
 {
-	return (d_clientdata->filename(fieldname,position) != 0 && d_clientdata->filename(fieldname,0)[0] != 0);
+	return (d_clientdata->filename(fieldname, position) != 0 && d_clientdata->filename(fieldname, 0)[0] != 0);
 }
 
 const char *Implementation::datasource(const char *fieldname) const
 {
-	return d_clientdata->datasource(fieldname,0);
+	return d_clientdata->datasource(fieldname, 0);
 }
 
 const char *Implementation::datasource(const char *fieldname, int position) const
 {
-	return d_clientdata->datasource(fieldname,position);
+	return d_clientdata->datasource(fieldname, position);
 }
 
-const char *Implementation::value( const char *fieldname) const
+const char *Implementation::value(const char *fieldname) const
 {
 	const char *ret = d_clientdata->value(fieldname, 0);
 
@@ -125,89 +127,85 @@ const char *Implementation::value( const char *fieldname) const
 	return ret ? ret : "";
 }
 
-const char * Implementation::value(const char *fieldname, int position) const 
+const char *Implementation::value(const char *fieldname, int position) const
 {
 	return d_clientdata->value(fieldname, position);
 }
 
-int Implementation::length(const char *fieldname) const 
+int Implementation::length(const char *fieldname) const
 {
 	return d_clientdata->length(fieldname, 0);
 }
-	
-int Implementation::length(const char *fieldname, int position) const 
+
+int Implementation::length(const char *fieldname, int position) const
 {
 	return d_clientdata->length(fieldname, position);
 }
-	
-const char *Implementation::contenttype(const char *fieldname) const 
+
+const char *Implementation::contenttype(const char *fieldname) const
 {
 	return d_clientdata->contentType(fieldname, 0);
 }
-	
-const char *Implementation::contenttype(const char *fieldname, int position) const 
+
+const char *Implementation::contenttype(const char *fieldname, int position) const
 {
 	return d_clientdata->contentType(fieldname, position);
 }
-	
-const char *Implementation::filename(const char *fieldname) const 
+
+const char *Implementation::filename(const char *fieldname) const
 {
 	return d_clientdata->filename(fieldname, 0);
 }
 
-const char *Implementation::filename(const char *fieldname, int position)  const 
+const char *Implementation::filename(const char *fieldname, int position) const
 {
 	return d_clientdata->filename(fieldname, position);
 }
 
-const char *Implementation::filepath(const char *fieldname) const 
+const char *Implementation::filepath(const char *fieldname) const
 {
 	return d_clientdata->filepath(fieldname, 0);
 }
 
-const char *Implementation::filepath(const char *fieldname, int position)  const 
+const char *Implementation::filepath(const char *fieldname, int position) const
 {
 	return d_clientdata->filepath(fieldname, position);
 }
 
-bool Implementation::isFile(int index) const 
+bool Implementation::isFile(int index) const
 {
 	return (d_clientdata->filename(index) != 0 && d_clientdata->filename(index)[0] != 0);
 }
 
-const char *Implementation::datasource(int index) const 
+const char *Implementation::datasource(int index) const
 {
 	return d_clientdata->datasource(index);
 }
 
-const char *Implementation::value(int index) const 
+const char *Implementation::value(int index) const
 {
 	return d_clientdata->value(index);
 }
 
-int Implementation::length(int index) const 
+int Implementation::length(int index) const
 {
 	return d_clientdata->length(index);
-
 }
-	
-const char *Implementation::contenttype(int index) const 
+
+const char *Implementation::contenttype(int index) const
 {
 	return d_clientdata->contentType(index);
-
 }
 
-const char *Implementation::filename(int index) const 
+const char *Implementation::filename(int index) const
 {
 	return d_clientdata->filename(index);
-
 }
-	
-const char *Implementation::filepath(int index) const 
+
+const char *Implementation::filepath(int index) const
 {
 	return d_clientdata->filepath(index);
-
 }
 
-}} // end namespaces
-
+} // namespace cgiparser
+} // namespace rude

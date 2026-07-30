@@ -9,18 +9,17 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 // 02111-1307, USA.
 //------------------------------------------------------------------------
-
 
 
 
@@ -31,36 +30,37 @@
 #include "FormdataExtractor.h"
 #endif
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 
 
 class ClientData;
 class AbstractParserFactory;
 
-class POSTExtractor: public FormdataExtractor{
+class POSTExtractor : public FormdataExtractor
+{
 
 	AbstractParserFactory *d_factory;
 
-public:
+  public:
+	static long MAXPOSTLENGTH;
 
-		static long MAXPOSTLENGTH;
+	// Seconds to wait for the POST body before giving up on it.
+	// 0 (the default) means wait indefinitely, which is the historical
+	// behaviour.  POSIX only; ignored on Windows.
+	//
+	static long MAXPOSTREADSECONDS;
 
-		// Seconds to wait for the POST body before giving up on it.
-		// 0 (the default) means wait indefinitely, which is the historical
-		// behaviour.  POSIX only; ignored on Windows.
-		//
-		static long MAXPOSTREADSECONDS;
+	POSTExtractor(AbstractParserFactory *factory);
 
-		POSTExtractor(AbstractParserFactory *factory);
+	ClientData *extract();
 
-		ClientData *extract();
-
-		~POSTExtractor();
-
+	~POSTExtractor();
 };
 
-}} // end namespaces
+} // namespace cgiparser
+} // namespace rude
 
 #endif
-

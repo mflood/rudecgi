@@ -9,12 +9,12 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -37,8 +37,10 @@
 #include "CaselessMatch.h"
 #endif
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 
 DataRepos::DataRepos()
 {
@@ -68,21 +70,21 @@ void DataRepos::setCaseSensitive(bool iscase)
 		}
 		else
 		{
-			d_wordmatcher= new CaselessMatch();
+			d_wordmatcher = new CaselessMatch();
 		}
 	}
 }
 
 DataRepos::~DataRepos()
 {
-	std::vector<DataObject*>::iterator iter;
+	std::vector<DataObject *>::iterator iter;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
-		delete (*iter);
+		delete(*iter);
 	}
 	delete d_wordmatcher;
 }
-	
+
 int DataRepos::numTotal() const
 {
 	return d_elements.size();
@@ -90,7 +92,7 @@ int DataRepos::numTotal() const
 
 const char *DataRepos::fieldAt(int index) const
 {
-	std::vector<DataObject*>::const_iterator iter;
+	std::vector<DataObject *>::const_iterator iter;
 	int x = 0;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
@@ -109,24 +111,24 @@ const char *DataRepos::fieldAt(int index) const
 
 int DataRepos::numValues(const char *fieldname) const
 {
-	std::vector<DataObject*>::const_iterator iter;
+	std::vector<DataObject *>::const_iterator iter;
 	int x = 0;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
-		if(d_wordmatcher->compare( (*iter)->getFieldName(), fieldname ) )
+		if(d_wordmatcher->compare((*iter)->getFieldName(), fieldname))
 		{
 			x++;
 		}
 	}
-	return x;		
+	return x;
 }
-	
+
 bool DataRepos::exists(const char *fieldname) const
 {
-	std::vector<DataObject*>::const_iterator iter;
+	std::vector<DataObject *>::const_iterator iter;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
-		if(d_wordmatcher->compare( (*iter)->getFieldName(), fieldname ) )
+		if(d_wordmatcher->compare((*iter)->getFieldName(), fieldname))
 		{
 			return true;
 		}
@@ -136,7 +138,7 @@ bool DataRepos::exists(const char *fieldname) const
 
 const char *DataRepos::value(int index) const
 {
-	std::vector<DataObject*>::const_iterator iter;
+	std::vector<DataObject *>::const_iterator iter;
 	int x = 0;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
@@ -148,7 +150,7 @@ const char *DataRepos::value(int index) const
 			}
 			return "";
 		}
-			x++;
+		x++;
 	}
 
 	// Out of bounds is NULL, as cgi.h documents.  Returning "" here made
@@ -156,14 +158,14 @@ const char *DataRepos::value(int index) const
 	//
 	return 0;
 }
-	
+
 const char *DataRepos::value(const char *fieldname, int position) const
 {
-	std::vector<DataObject*>::const_iterator iter;
+	std::vector<DataObject *>::const_iterator iter;
 	int x = 0;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
-		if(d_wordmatcher->compare( (*iter)->getFieldName(), fieldname ) )
+		if(d_wordmatcher->compare((*iter)->getFieldName(), fieldname))
 		{
 			if(x == position)
 			{
@@ -186,7 +188,7 @@ const char *DataRepos::value(const char *fieldname, int position) const
 
 const char *DataRepos::filepath(int index) const
 {
-	std::vector<DataObject*>::const_iterator iter;
+	std::vector<DataObject *>::const_iterator iter;
 	int x = 0;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
@@ -198,18 +200,18 @@ const char *DataRepos::filepath(int index) const
 			}
 			return "";
 		}
-			x++;
+		x++;
 	}
-	return "";		
+	return "";
 }
 
 const char *DataRepos::filepath(const char *fieldname, int position) const
 {
-	std::vector<DataObject*>::const_iterator iter;
+	std::vector<DataObject *>::const_iterator iter;
 	int x = 0;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
-		if(d_wordmatcher->compare( (*iter)->getFieldName(), fieldname ) )
+		if(d_wordmatcher->compare((*iter)->getFieldName(), fieldname))
 		{
 			if(x == position)
 			{
@@ -220,12 +222,12 @@ const char *DataRepos::filepath(const char *fieldname, int position) const
 	}
 	// returning NULL!!!
 	//
-	return 0;		
+	return 0;
 }
 
 const char *DataRepos::filename(int index) const
 {
-	std::vector<DataObject*>::const_iterator iter;
+	std::vector<DataObject *>::const_iterator iter;
 	int x = 0;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
@@ -237,18 +239,18 @@ const char *DataRepos::filename(int index) const
 			}
 			return "";
 		}
-			x++;
+		x++;
 	}
-	return "";		
+	return "";
 }
 
 const char *DataRepos::filename(const char *fieldname, int position) const
 {
-	std::vector<DataObject*>::const_iterator iter;
+	std::vector<DataObject *>::const_iterator iter;
 	int x = 0;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
-		if(d_wordmatcher->compare( (*iter)->getFieldName(), fieldname ) )
+		if(d_wordmatcher->compare((*iter)->getFieldName(), fieldname))
 		{
 			if(x == position)
 			{
@@ -260,12 +262,12 @@ const char *DataRepos::filename(const char *fieldname, int position) const
 	// returning empty string!!!!
 	// instead of NULL!!!
 	//
-	return 0;		
+	return 0;
 }
 
 const char *DataRepos::contentType(int index) const
 {
-	std::vector<DataObject*>::const_iterator iter;
+	std::vector<DataObject *>::const_iterator iter;
 	int x = 0;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
@@ -277,18 +279,18 @@ const char *DataRepos::contentType(int index) const
 			}
 			return "";
 		}
-			x++;
+		x++;
 	}
-	return "";		
+	return "";
 }
 
 const char *DataRepos::contentType(const char *fieldname, int position) const
 {
-	std::vector<DataObject*>::const_iterator iter;
+	std::vector<DataObject *>::const_iterator iter;
 	int x = 0;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
-		if(d_wordmatcher->compare( (*iter)->getFieldName(), fieldname ) )
+		if(d_wordmatcher->compare((*iter)->getFieldName(), fieldname))
 		{
 			if(x == position)
 			{
@@ -300,12 +302,12 @@ const char *DataRepos::contentType(const char *fieldname, int position) const
 	// returning empty string!!!!
 	// instead of NULL!!!
 	//
-	return 0;		
+	return 0;
 }
 
 int DataRepos::length(int index) const
 {
-	std::vector<DataObject*>::const_iterator iter;
+	std::vector<DataObject *>::const_iterator iter;
 	int x = 0;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
@@ -317,19 +319,19 @@ int DataRepos::length(int index) const
 			}
 			return 0;
 		}
-			x++;
+		x++;
 	}
-	return 0;		
+	return 0;
 }
 
 
 int DataRepos::length(const char *fieldname, int position) const
 {
-	std::vector<DataObject*>::const_iterator iter;
+	std::vector<DataObject *>::const_iterator iter;
 	int x = 0;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
-		if(d_wordmatcher->compare( (*iter)->getFieldName(), fieldname ) )
+		if(d_wordmatcher->compare((*iter)->getFieldName(), fieldname))
 		{
 			if(x == position)
 			{
@@ -338,12 +340,12 @@ int DataRepos::length(const char *fieldname, int position) const
 			x++;
 		}
 	}
-	return 0;		
+	return 0;
 }
 
-const char *  DataRepos::datasource(int index) const
+const char *DataRepos::datasource(int index) const
 {
-	std::vector<DataObject*>::const_iterator iter;
+	std::vector<DataObject *>::const_iterator iter;
 	int x = 0;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
@@ -355,18 +357,18 @@ const char *  DataRepos::datasource(int index) const
 			}
 			return "";
 		}
-			x++;
+		x++;
 	}
-	return "";		
+	return "";
 }
 
-const char * DataRepos::datasource(const char *fieldname, int position) const
+const char *DataRepos::datasource(const char *fieldname, int position) const
 {
-	std::vector<DataObject*>::const_iterator iter;
+	std::vector<DataObject *>::const_iterator iter;
 	int x = 0;
 	for(iter = d_elements.begin(); iter != d_elements.end(); iter++)
 	{
-		if(d_wordmatcher->compare( (*iter)->getFieldName(), fieldname ) )
+		if(d_wordmatcher->compare((*iter)->getFieldName(), fieldname))
 		{
 			if(x == position)
 			{
@@ -375,14 +377,14 @@ const char * DataRepos::datasource(const char *fieldname, int position) const
 			x++;
 		}
 	}
-	return 0;		
+	return 0;
 }
 
-	
+
 void DataRepos::addDataObject(DataObject *o)
 {
 	d_elements.push_back(o);
 }
 
-}} // end namespaces
-
+} // namespace cgiparser
+} // namespace rude

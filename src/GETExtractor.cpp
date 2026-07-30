@@ -9,18 +9,17 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 // 02111-1307, USA.
 //------------------------------------------------------------------------
-
 
 
 
@@ -58,8 +57,10 @@
 #define INCLUDED_STDLIB_H
 #endif
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 
 bool GETExtractor::PARSECOOKIES = true;
 bool GETExtractor::PARSEPATH = true;
@@ -75,10 +76,10 @@ DataRepos *GETExtractor::extractDataRepos()
 DataRepos *GETExtractor::extractDataReposWithoutCookies()
 {
 	DataRepos *repository = new DataRepos();
-	
+
 	// Parse the Query String
 	//
-	char  *querystring=getenv("QUERY_STRING");
+	char *querystring = getenv("QUERY_STRING");
 	if(querystring != NULL)
 	{
 		URLEncodeParser parser;
@@ -87,24 +88,24 @@ DataRepos *GETExtractor::extractDataReposWithoutCookies()
 
 		// the parser mangles input, so copy querystring into temp buffer
 		//
-		char *buffer = new char[length+1];
+		char *buffer = new char[length + 1];
 		strcpy(buffer, querystring);
-		
+
 		parser.parse(repository, buffer, length);
 
-		delete [] buffer;
+		delete[] buffer;
 	}
 
-	
+
 	// Parse Path Data
 	//
-	char  *pathstring=getenv("PATH_INFO");
+	char *pathstring = getenv("PATH_INFO");
 	if(pathstring != NULL)
 	{
 		// the parser mangles input, so copy pathstring into temp buffer
 		//
 		int length = strlen(pathstring);
-		char *buffer = new char[length+1];
+		char *buffer = new char[length + 1];
 
 		if(PARSEPATH)
 		{
@@ -112,25 +113,24 @@ DataRepos *GETExtractor::extractDataReposWithoutCookies()
 			strcpy(buffer, pathstring);
 			parser.parse(repository, buffer, length);
 		}
-		
+
 		if(PARSEPATHMAP)
 		{
 			PathMapParser parser;
 			strcpy(buffer, pathstring);
 			parser.parse(repository, buffer, length);
 		}
-		delete [] buffer;
+		delete[] buffer;
 	}
 
 
 
-	
 	return repository;
 }
 
 void GETExtractor::parseCookiesInto(DataRepos *repository)
 {
-	char  *cookiestring=getenv("HTTP_COOKIE");
+	char *cookiestring = getenv("HTTP_COOKIE");
 	if(cookiestring == NULL || !PARSECOOKIES)
 	{
 		return;
@@ -142,12 +142,12 @@ void GETExtractor::parseCookiesInto(DataRepos *repository)
 
 	// the parser mangles input, so copy the cookie string into a temp buffer
 	//
-	char *buffer = new char[length+1];
+	char *buffer = new char[length + 1];
 	strcpy(buffer, cookiestring);
 
 	parser.parse(repository, buffer, length);
 
-	delete [] buffer;
+	delete[] buffer;
 }
 
 ClientData *GETExtractor::extract()
@@ -155,5 +155,5 @@ ClientData *GETExtractor::extract()
 	return extractDataRepos();
 }
 
-}} // end namespaces
-
+} // namespace cgiparser
+} // namespace rude

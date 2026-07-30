@@ -9,12 +9,12 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -23,25 +23,26 @@
 
 
 
-
 #ifndef INCLUDED_WordMatch_H
 #define INCLUDED_WordMatch_H
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 
 //=
 // Provides an implementation independent Strategy Interface for comparing words
 //
 //=
 
-class WordMatch{
+class WordMatch
+{
 
-protected:
+  protected:
 	WordMatch();
 
-public:
-
+  public:
 	//=
 	// Compares two strings
 	//
@@ -49,10 +50,9 @@ public:
 	//=
 	virtual bool compare(const char *word1, const char *word2) const = 0;
 	virtual ~WordMatch();
-	
 };
 
-}} // end namespaces
+} // namespace cgiparser
+} // namespace rude
 
 #endif
-

@@ -9,12 +9,12 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -30,8 +30,10 @@
 #include "SimpleData.h"
 #endif
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 
 
 // this class is a liteweight hash table
@@ -39,11 +41,10 @@ namespace cgiparser{
 // not binary data. For binary data, use
 // Req_FileObject.
 //
-class CookieData: public SimpleData
+class CookieData : public SimpleData
 {
 
-public:
-
+  public:
 	// CONSTRUCTORS
 	//
 	CookieData();
@@ -52,7 +53,7 @@ public:
 	// DESTRUCTOR
 	//
 	~CookieData();
-	
+
 	//=
 	// Returns the fieldname if it exists, or the empty string
 	//=
@@ -103,6 +104,7 @@ public:
 	const char *datasource() const;
 };
 
-}} // end namespaces
+} // namespace cgiparser
+} // namespace rude
 
 #endif

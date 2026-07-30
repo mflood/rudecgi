@@ -9,12 +9,12 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -35,11 +35,14 @@
 #define INCLUDED_STRING
 #endif
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 
 
-class FileData: public DataObject{
+class FileData : public DataObject
+{
 
 	static int s_maxfilename;
 	static const char *s_defaultcontenttype;
@@ -51,11 +54,8 @@ class FileData: public DataObject{
 	int d_length;
 	char *d_value;
 
-protected:
-	
-
-public:
-
+  protected:
+  public:
 	static void setDefaultContentType(const char *contenttype);
 	static void setMaxFilename(int maxlength);
 
@@ -75,6 +75,6 @@ public:
 	const char *datasource() const;
 	virtual ~FileData();
 };
-}}
+} // namespace cgiparser
+} // namespace rude
 #endif
-

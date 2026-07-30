@@ -9,18 +9,17 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 // 02111-1307, USA.
 //------------------------------------------------------------------------
-
 
 
 
@@ -45,15 +44,15 @@
 #define INCLUDED_VECTOR
 #endif
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 
-class Interactive: public ClientData{
+class Interactive : public ClientData
+{
 
-public:
-
-
-
+  public:
 	void setCaseSensitive(bool iscase);
 	int numTotal() const;
 	const char *fieldAt(int index) const;
@@ -71,10 +70,9 @@ public:
 	bool exists(const char *fieldname) const;
 	const char *datasource(int index) const;
 	const char *datasource(const char *fieldname, int position) const;
-
 };
 
-}} // end namespaces
+} // namespace cgiparser
+} // namespace rude
 
 #endif
-

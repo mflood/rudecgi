@@ -9,12 +9,12 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -24,18 +24,19 @@
 
 
 #include "SimpleData.h"
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 
 SimpleData::SimpleData()
 {
-
 }
-	
+
 SimpleData::SimpleData(const char *name, const char *value)
 {
-		d_name = name ? name: "";
-		d_value = value ? value: "";
+	d_name = name ? name : "";
+	d_value = value ? value : "";
 }
 
 const char *SimpleData::getFieldName() const
@@ -74,12 +75,12 @@ const char *SimpleData::getContentType() const
 
 void SimpleData::setValue(const char *value)
 {
-	d_value = value? value: "";
+	d_value = value ? value : "";
 }
 
 void SimpleData::setFieldName(const char *name)
 {
-	d_name = name? name: "";
+	d_name = name ? name : "";
 }
 
 const char *SimpleData::datasource() const
@@ -89,6 +90,6 @@ const char *SimpleData::datasource() const
 
 SimpleData::~SimpleData()
 {
-
 }
-}}
+} // namespace cgiparser
+} // namespace rude

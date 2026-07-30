@@ -9,18 +9,17 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 // 02111-1307, USA.
 //------------------------------------------------------------------------
-
 
 
 
@@ -36,22 +35,22 @@
 #define INCLUDED_STRING_H
 #endif
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 
 AbstractParser::AbstractParser()
 {
-
 }
 
 AbstractParser::~AbstractParser()
 {
-
 }
-	
+
 void AbstractParser::setError(const char *error)
 {
-	d_error = error? error: "";
+	d_error = error ? error : "";
 }
 
 const char *AbstractParser::getError()
@@ -66,66 +65,66 @@ const char *AbstractParser::getError()
 
 int AbstractParser::unescape(char *s)
 {
-	int Error=0;
-	static const char *Hex="0123456789ABCDEF";
+	int Error = 0;
+	static const char *Hex = "0123456789ABCDEF";
 	unsigned int Ascii;
 	char *p;
 	const char *Match;
-	for(p=s ; !Error && *s != '\0'; s++)
+	for(p = s; !Error && *s != '\0'; s++)
 	{
 		if(*s == '%')
 		{
 			s++;
-			if(*s=='\0')
+			if(*s == '\0')
 			{
 				break;
 			}
-			if(islower((unsigned char)*s))
+			if(islower((unsigned char) *s))
 			{
-				*s=(char)toupper((unsigned char)*s);
+				*s = (char) toupper((unsigned char) *s);
 			}
-			if((Match=strchr(Hex, *s)) != NULL)
+			if((Match = strchr(Hex, *s)) != NULL)
 			{
-				Ascii=(unsigned int)(Match - Hex);
+				Ascii = (unsigned int) (Match - Hex);
 				s++;
-				if(*s=='\0')
+				if(*s == '\0')
 				{
 					break;
 				}
-				if(islower((unsigned char)*s))
+				if(islower((unsigned char) *s))
 				{
-					*s=(char)toupper((unsigned char)*s);
+					*s = (char) toupper((unsigned char) *s);
 				}
-				if( (Match = strchr(Hex, *s)) != NULL)
+				if((Match = strchr(Hex, *s)) != NULL)
 				{
-					Ascii<<=4;
-					Ascii |= (unsigned int)(Match - Hex);
-					*p++ = (char)Ascii;
+					Ascii <<= 4;
+					Ascii |= (unsigned int) (Match - Hex);
+					*p++ = (char) Ascii;
 				}
 				else
 				{
-					Error=1;
+					Error = 1;
 					continue;
 				}
 			}
 			else
 			{
-				Error=1;
+				Error = 1;
 				continue;
 			}
 		}
 		else if(*s == '+')
 		{
-			*p++=' ';
+			*p++ = ' ';
 		}
 		else
 		{
-			*p++=*s;
+			*p++ = *s;
 		}
 	}
-	*p='\0';
+	*p = '\0';
 	return Error;
 }
 
-}} // end namespaces
-
+} // namespace cgiparser
+} // namespace rude

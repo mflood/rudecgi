@@ -9,12 +9,12 @@
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2, or (at your option)
 // any later version.
-// 
+//
 // RudeCGI is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
-// 
+//
 // You should have received a copy of the GNU General Public License
 // along with RudeCGI; (see COPYING) if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
@@ -26,16 +26,18 @@
 #ifndef INCLUDED_ClientData_H
 #define INCLUDED_ClientData_H
 
-namespace rude{
-namespace cgiparser{
+namespace rude
+{
+namespace cgiparser
+{
 
-class ClientData{
+class ClientData
+{
 
-protected:
+  protected:
 	ClientData();
 
-public:
-
+  public:
 	virtual void setCaseSensitive(bool iscase) = 0;
 
 	// returns the total number of data elements that exist in the collection
@@ -71,14 +73,14 @@ public:
 	// of the object as it exists on the clients remote computer.
 	// If the data object is not an uploaded file, or no filename was specified,
 	// then this will return NULL.  The filename returned will be untainted,
-	// and safe to use as a filename on the local machine. 
+	// and safe to use as a filename on the local machine.
 	//
 	virtual const char *filename(int index) const = 0;
 	virtual const char *filename(const char *fieldname, int position) const = 0;
 
 	// If the data object identified by fieldname and position is a file,
 	// then this will return the content-type associated with the file.
-	// If no content-type was formally identified, this will return a 
+	// If no content-type was formally identified, this will return a
 	// defualt value of application/octet-stream.  If the object is not
 	// a file object, this function will return Null
 	//
@@ -98,10 +100,9 @@ public:
 	virtual bool exists(const char *fieldname) const = 0;
 
 	virtual ~ClientData();
-
 };
 
-}} // end namespaces
+} // namespace cgiparser
+} // namespace rude
 
 #endif
-
