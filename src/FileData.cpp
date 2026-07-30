@@ -200,7 +200,7 @@ void FileData::setFilename(const char *name)
 		{
 			// keep regular characters
 			//
-			if(isalnum(begin[x]) || begin[x] == '.')
+			if(isalnum((unsigned char)begin[x]) || begin[x] == '.')
 			{
 				*ptr = begin[x];
 				ptr++;
@@ -225,7 +225,7 @@ void FileData::setFilename(const char *name)
 
 		// reap memory
 		//
-		delete newname;
+		delete [] newname;
 	}
 	else
 	{

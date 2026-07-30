@@ -112,8 +112,8 @@ bool NewMultipartParser::parse(DataRepos *repository, char *data, int length)
 						// the length of the boundary we just read - so subtract
 						// the length of the boundary from the datalength
 						datalength -= realboundary.length();
-						
-						if(datalength < 0)
+
+						if((int) datalength < 0)
 						{
 							// should return false here - something terrible has happened
 							// if the datalength is less than 0
@@ -277,12 +277,12 @@ void NewMultipartParser::parseSection(DataRepos *repository, char *data, int len
 			datalength -= (linelength +1);
 			data += linelength +1;
 			// if we are sitting on top of the LF section of a CRLF, we need to move past it
-			if(isspace(*data) && *data != CR)
+			if(isspace((unsigned char)*data) && *data != CR)
 			{
 				data++;
 				datalength--;
 			}
-			if(datalength < 0)
+			if((int) datalength < 0)
 			{
 				datalength=0;
 			}

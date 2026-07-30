@@ -67,10 +67,10 @@ const char *AbstractParser::getError()
 int AbstractParser::unescape(char *s)
 {
 	int Error=0;
-	static  char *Hex="0123456789ABCDEF";
+	static const char *Hex="0123456789ABCDEF";
 	unsigned int Ascii;
 	char *p;
-	char *Match;
+	const char *Match;
 	for(p=s ; !Error && *s != '\0'; s++)
 	{
 		if(*s == '%')
@@ -80,9 +80,9 @@ int AbstractParser::unescape(char *s)
 			{
 				break;
 			}
-			if(islower(*s))
+			if(islower((unsigned char)*s))
 			{
-				*s=toupper(*s);
+				*s=(char)toupper((unsigned char)*s);
 			}
 			if((Match=strchr(Hex, *s)) != NULL)
 			{
@@ -92,9 +92,9 @@ int AbstractParser::unescape(char *s)
 				{
 					break;
 				}
-				if(islower(*s))
+				if(islower((unsigned char)*s))
 				{
-					*s=toupper(*s);
+					*s=(char)toupper((unsigned char)*s);
 				}
 				if( (Match = strchr(Hex, *s)) != NULL)
 				{

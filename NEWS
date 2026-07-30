@@ -4,6 +4,22 @@ See the end for copying conditions.
 
 
 __________________________________________________________________________________
+Release 5.1.0 - Matthew Flood 2026-07-30
+
+	- New CMake build system (autotools files retained but deprecated);
+	  installs CMake package config and pkg-config files.
+	- Code modernized to compile cleanly as C++17 with -Wall -Wextra
+	  (const-correct hex table in the URL decoder, ctype calls made
+	  safe for high-bit/UTF-8 input on signed-char platforms, fixed a
+	  mismatched delete on uploaded-file names).
+	- Added test suite (ctest) covering GET query strings, POST bodies,
+	  and cookies, plus GitHub Actions CI on Linux x86_64/ARM, macOS,
+	  and Windows, and an ASan/UBSan job.
+	- New README with verified quick-start example and a correction:
+	  the documented CGI::instance() method never existed in this API;
+	  simply construct a rude::CGI object.
+
+__________________________________________________________________________________
 Release 5.0.0-1 - Matthew Flood 2007-05-23
 
 	- Changed public interface name from CGIParser to CGI
