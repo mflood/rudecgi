@@ -7,10 +7,15 @@
 // is why earlier testing concluded there was no hang - the real web-server
 // case is a pipe that stays open.
 //
-// CGI::maxPostReadSeconds() bounds that wait. This test feeds stdin from a
-// pipe whose write end is deliberately left open, declares far more than it
-// writes, and requires the constructor to return on schedule with the partial
-// body parsed.
+// A positive CGI::maxPostReadSeconds() bounds the read as a whole. This test
+// feeds stdin from a pipe whose write end is deliberately left open, declares
+// far more than it writes, and requires the constructor to return on schedule
+// with the partial body parsed.
+//
+// Since 5.4.0 the default is bounded too, by an idle limit rather than an
+// overall one; test_post_read_default.cpp covers that. This file is about the
+// explicit overall limit, which is the stricter of the two and the one to
+// reach for against a client that drip-feeds the body.
 //
 // POSIX only: the fix relies on select() over a pipe.
 #ifdef _WIN32
