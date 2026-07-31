@@ -7,10 +7,15 @@
 // is why earlier testing concluded there was no hang - the real web-server
 // case is a pipe that stays open.
 //
-// CGI::maxPostReadSeconds() bounds that wait. This test feeds stdin from a
-// pipe whose write end is deliberately left open, declares far more than it
-// writes, and requires the constructor to return on schedule with the partial
-// body parsed.
+// A positive CGI::maxPostReadSeconds() bounds the read as a whole. This test
+// feeds stdin from a pipe whose write end is deliberately left open, declares
+// far more than it writes, and requires the constructor to return on schedule
+// with the partial body parsed.
+//
+// Since 5.4.0 the default is bounded too, by an idle limit rather than an
+// overall one; test_post_read_default.cpp covers that. This file is about the
+// explicit overall limit, which is the stricter of the two and the one to
+// reach for against a client that drip-feeds the body.
 //
 // POSIX only: the fix relies on select() over a pipe.
 #ifdef _WIN32
@@ -75,11 +80,16 @@ int main()
 	setenv("CONTENT_TYPE", "application/x-www-form-urlencoded", 1);
 	setenv("CONTENT_LENGTH", "100000", 1); // far more than we wrote
 
-	// Control path: with RUDECGI_TEST_NO_TIMEOUT set, the limit is left at its
-	// default of 0 and the read must block indefinitely, demonstrating both
-	// the original bug and that the default behaviour is unchanged. Run
-	// manually under an external timeout; not registered as a ctest, because
-	// the whole point is that it never returns.
+	// Control path: with RUDECGI_TEST_NO_TIMEOUT set, the limit is set
+	// negative, which is the documented way to ask for no bound at all, and
+	// the read must then block indefinitely. That demonstrates the original
+	// bug -- it was the behaviour of the default until 5.4.0 -- and that the
+	// escape hatch still works for anyone who wants it back. Run manually
+	// under an external timeout; not registered as a ctest, because the whole
+	// point is that it never returns.
+	//
+	// The default (0) is no longer a control here: it now stops on its own
+	// after an idle period. test_post_read_default.cpp covers that.
 	const bool useTimeout = (std::getenv("RUDECGI_TEST_NO_TIMEOUT") == 0);
 	if(useTimeout)
 	{
@@ -87,7 +97,8 @@ int main()
 	}
 	else
 	{
-		std::printf("control: no read limit set, expecting to block\n");
+		rude::CGI::maxPostReadSeconds(-1);
+		std::printf("control: limit removed with -1, expecting to block\n");
 		std::fflush(stdout);
 	}
 

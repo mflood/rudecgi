@@ -111,13 +111,17 @@ void CGI::maxPostLength(long bytes)
 
 void CGI::maxPostReadSeconds(long seconds)
 {
-	if(seconds > 0)
+	// Negative values all mean the same thing - no limit whatsoever - so
+	// normalise them to -1 rather than letting the magnitude leak through as
+	// something that looks meaningful.
+	//
+	if(seconds < 0)
 	{
-		POSTExtractor::MAXPOSTREADSECONDS = seconds;
+		POSTExtractor::MAXPOSTREADSECONDS = -1;
 	}
 	else
 	{
-		POSTExtractor::MAXPOSTREADSECONDS = 0;
+		POSTExtractor::MAXPOSTREADSECONDS = seconds;
 	}
 }
 

@@ -270,23 +270,36 @@ class CGI
 	//=
 	// Sets how long to wait for the POST body, in seconds.
 	// <p>
-	// By <b>default</b> there is no limit, and reading the body waits
-	// indefinitely.  That is safe when the web server sends exactly
-	// CONTENT_LENGTH bytes, but a client that over-declares CONTENT_LENGTH
-	// and then keeps the connection open will pin this process forever.
-	// Setting a limit bounds that wait; whatever arrived in time is parsed.
+	// Reading the body is bounded even if you never call this.  By
+	// <b>default</b> there is no limit on the read as a whole, but it gives
+	// up after <b>60 seconds with nothing arriving at all</b>, and parses
+	// whatever did arrive.  Without that, a client that over-declares
+	// CONTENT_LENGTH and then simply keeps the connection open pinned this
+	// process for as long as it liked.
 	// <p>
-	// Pass 0 to restore the default of waiting indefinitely.
+	// The default is deliberately an <i>idle</i> limit and not a cap on the
+	// whole read: a large upload over a slow link takes a long time while
+	// still making progress, and only the absence of progress indicates a
+	// stall.  Every byte received starts the 60 seconds over.
 	// <p>
-	// <b>Note:</b> POSIX only.  On Windows the limit is ignored, because
-	// select() there applies to sockets rather than to the pipe a CGI
-	// process is given for stdin.
-	// <p>
-	// <b>Example:</b>
+	// Pass a <b>positive</b> value to bound the read as a whole instead.
+	// That is the stricter option, and the one to use if you need to stop a
+	// client that drip-feeds the body slowly enough to stay under the idle
+	// limit:
 	// <p>
 	// <code>
-	// CGI::maxPostReadSeconds( 30 ); // give up on a stalled body after 30s
+	// CGI::maxPostReadSeconds( 30 ); // 30 seconds for the whole body
 	// </code>
+	// <p>
+	// Pass a <b>negative</b> value to remove every limit and block until the
+	// body arrives or the peer disconnects.  This restores the behaviour of
+	// releases before 5.4.0; there is no other reason to want it.
+	// <p>
+	// Pass <b>0</b> to return to the default described above.
+	// <p>
+	// <b>Note:</b> POSIX only.  On Windows none of this applies and the read
+	// blocks, because select() there works on sockets rather than on the
+	// pipe a CGI process is handed for stdin.
 	//=
 	static void maxPostReadSeconds(long seconds);
 

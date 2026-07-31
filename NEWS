@@ -4,6 +4,35 @@ See the end for copying conditions.
 
 
 __________________________________________________________________________________
+Release 5.4.0 - Matthew Flood 2026-07-30
+
+	- CHANGED: reading the POST body is now bounded by default.  5.2.0
+	  added CGI::maxPostReadSeconds() to bound a stalled body read, but
+	  left the default at "wait forever", so the hazard it addressed was
+	  still live in every build whose author had not heard of the setting:
+	  a client that over-declares CONTENT_LENGTH and then keeps the
+	  connection open pinned the process indefinitely, with no code change
+	  required on the client's part.  The read now gives up after 60
+	  seconds with nothing arriving at all, and parses whatever did
+	  arrive.
+	- The new default is an *idle* limit, not a cap on the whole read.  A
+	  large upload over a slow link legitimately takes minutes while making
+	  steady progress, and only the absence of progress indicates a stall,
+	  so that is what is measured; every byte received starts the 60
+	  seconds over.  60 seconds matches nginx's client_body_timeout, which
+	  is the same idea applied to the same bytes one layer up.  Note that
+	  an idle limit does not stop a client drip-feeding the body slowly
+	  enough to stay under it - pass a positive value to
+	  CGI::maxPostReadSeconds() to bound the read as a whole, which is
+	  unchanged from 5.2.0.
+	- CGI::maxPostReadSeconds() now accepts a negative value, meaning no
+	  bound of any kind.  This restores the pre-5.4.0 default for anyone
+	  who was relying on it.  Previously any value <= 0 was treated as 0.
+	- Unchanged on Windows, where the read still blocks: the bound relies
+	  on select() over a pipe, and select() on Windows applies to sockets
+	  only.
+
+__________________________________________________________________________________
 Release 5.3.0 - Matthew Flood 2026-07-30
 
 	- REMOVED: the autotools build (configure, configure.ac, Makefile.am,
