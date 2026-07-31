@@ -75,11 +75,16 @@ int main()
 	setenv("CONTENT_TYPE", "application/x-www-form-urlencoded", 1);
 	setenv("CONTENT_LENGTH", "100000", 1); // far more than we wrote
 
-	// Control path: with RUDECGI_TEST_NO_TIMEOUT set, the limit is left at its
-	// default of 0 and the read must block indefinitely, demonstrating both
-	// the original bug and that the default behaviour is unchanged. Run
-	// manually under an external timeout; not registered as a ctest, because
-	// the whole point is that it never returns.
+	// Control path: with RUDECGI_TEST_NO_TIMEOUT set, the limit is set
+	// negative, which is the documented way to ask for no bound at all, and
+	// the read must then block indefinitely. That demonstrates the original
+	// bug -- it was the behaviour of the default until 5.4.0 -- and that the
+	// escape hatch still works for anyone who wants it back. Run manually
+	// under an external timeout; not registered as a ctest, because the whole
+	// point is that it never returns.
+	//
+	// The default (0) is no longer a control here: it now stops on its own
+	// after an idle period. test_post_read_default.cpp covers that.
 	const bool useTimeout = (std::getenv("RUDECGI_TEST_NO_TIMEOUT") == 0);
 	if(useTimeout)
 	{
@@ -87,7 +92,8 @@ int main()
 	}
 	else
 	{
-		std::printf("control: no read limit set, expecting to block\n");
+		rude::CGI::maxPostReadSeconds(-1);
+		std::printf("control: limit removed with -1, expecting to block\n");
 		std::fflush(stdout);
 	}
 

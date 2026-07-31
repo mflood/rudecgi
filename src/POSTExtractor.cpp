@@ -112,44 +112,80 @@ POSTExtractor::~POSTExtractor()
 }
 
 //
+// How long the body read will sit with nothing arriving at all before it
+// gives up, when the caller has not set an overall limit of their own.
+//
+// This exists because the alternative default was "wait forever".  fread()
+// returns only once it has the full count or sees EOF, so a client that
+// over-declares CONTENT_LENGTH and then holds the connection open pinned the
+// CGI process for as long as it cared to - no code change required on the
+// client's part, and nothing in a default build to stop it.
+//
+// It is an *idle* limit rather than a cap on the whole read.  A large upload
+// over a slow link legitimately takes minutes while making steady progress; a
+// stall is the absence of progress, so that is what gets measured.  Any byte
+// arriving restarts the clock.  The cost of that choice is that a client
+// drip-feeding one byte every 59 seconds still gets to hang around - see
+// CGI::maxPostReadSeconds(), which bounds the read as a whole.
+//
+static const long DEFAULT_IDLE_READ_SECONDS = 60;
+
+//
 // Reads up to 'length' bytes of request body.
 //
-// With no timeout configured this is a plain fread(), matching the
-// historical behaviour.  With one, stdio is bypassed in favour of the raw
-// descriptor so that select() can bound the wait: fread() blocks until it
-// has the full count or hits EOF, so a client that over-declares
-// CONTENT_LENGTH and then holds the connection open pins the CGI process
-// indefinitely.  Nothing has been read from stdin before this point, so
-// switching to read() here cannot strand buffered data.
+// stdio is bypassed in favour of the raw descriptor so that select() can bound
+// the wait.  Nothing has been read from stdin before this point, so switching
+// to read() here cannot strand buffered data.
 //
-// select() on a pipe is POSIX; on Windows it only works for sockets, so the
-// timeout is ignored there and the read stays a plain fread().
+// timeoutsecs is CGI::maxPostReadSeconds():
+//
+//    > 0   bound the read as a whole; stop at that deadline.
+//    == 0  the default - no overall bound, but stop after
+//          DEFAULT_IDLE_READ_SECONDS with nothing received.
+//    < 0   no bound of any kind; block in fread() until the body arrives or
+//          the peer goes away.
+//
+// Whatever has arrived when the read stops is what gets parsed.
+//
+// select() over a pipe is POSIX.  On Windows it applies to sockets only, so
+// none of this is available there and the read stays a plain fread().
 //
 static size_t readRequestBody(char *buffer, long length, long timeoutsecs)
 {
 #ifndef WIN32
-	if(timeoutsecs > 0)
+	if(timeoutsecs >= 0)
 	{
 		int fd = fileno(stdin);
 		if(fd >= 0)
 		{
-			std::chrono::steady_clock::time_point deadline =
-				std::chrono::steady_clock::now() + std::chrono::seconds(timeoutsecs);
+			const bool overall = (timeoutsecs > 0);
+			const std::chrono::steady_clock::time_point deadline =
+				std::chrono::steady_clock::now() + std::chrono::seconds(overall ? timeoutsecs : 0);
 
 			size_t total = 0;
 			while(total < (size_t) length)
 			{
-				std::chrono::steady_clock::duration left =
-					deadline - std::chrono::steady_clock::now();
-				if(left.count() <= 0)
+				// Wait out the idle allowance, or what is left of the
+				// caller's overall deadline, whichever runs out first.
+				//
+				std::chrono::steady_clock::duration wait =
+					std::chrono::seconds(DEFAULT_IDLE_READ_SECONDS);
+
+				if(overall)
 				{
-					// Out of time: keep whatever arrived and parse that.
-					//
-					break;
+					std::chrono::steady_clock::duration left =
+						deadline - std::chrono::steady_clock::now();
+					if(left.count() <= 0)
+					{
+						// Out of time: keep whatever arrived and parse that.
+						//
+						break;
+					}
+					wait = left;
 				}
 
 				long usecs = (long) std::chrono::duration_cast<
-								 std::chrono::microseconds>(left)
+								 std::chrono::microseconds>(wait)
 								 .count();
 				struct timeval tv;
 				tv.tv_sec = usecs / 1000000;
@@ -175,6 +211,9 @@ static size_t readRequestBody(char *buffer, long length, long timeoutsecs)
 					break;
 				}
 				total += (size_t) got;
+
+				// Progress: the idle allowance starts over.  Nothing to reset
+				// explicitly, since it is measured per select() call.
 			}
 			return total;
 		}

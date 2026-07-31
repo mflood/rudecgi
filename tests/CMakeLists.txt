@@ -42,6 +42,15 @@ add_executable(test_post_read_timeout test_post_read_timeout.cpp)
 target_link_libraries(test_post_read_timeout PRIVATE rudecgi::rudecgi)
 add_test(NAME post_read_timeout COMMAND test_post_read_timeout)
 
+# Waits out the built-in idle limit, so it takes about a minute by
+# construction: a 60-second bound cannot be observed in less than 60 seconds.
+# The alternative is not testing that the default terminates at all, which is
+# the hang this suite exists to prevent.
+add_executable(test_post_read_default test_post_read_default.cpp)
+target_link_libraries(test_post_read_default PRIVATE rudecgi::rudecgi)
+add_test(NAME post_read_default COMMAND test_post_read_default)
+set_tests_properties(post_read_default PROPERTIES TIMEOUT 180)
+
 # Each test runs in its own scratch dir so file fixtures don't collide.
 set(ALL_TESTS get post cookie version ${CONTENT_LENGTH_TESTS})
 set_tests_properties(${ALL_TESTS} PROPERTIES TIMEOUT 60)
