@@ -1,139 +1,151 @@
-# rudecgi
+# RudeCGI
 
-A small C++ library for CGI programs: it parses form data (GET query
-strings and POST bodies), cookies, `PATH_INFO`, and multipart file
-uploads into one collection you query by field name.
+RudeCGI gives C++ CGI applications a compact interface to query parameters,
+form submissions, cookies, path data, and uploaded files.
 
-```cpp
-rude::CGI cgi;                 // parses the whole request, right here
-const char *who = cgi.value("username");
-```
+## Why RudeCGI?
 
-First released in 2000 as part of the [RudeServer](https://github.com/mflood)
-C++ CGI library family; modernized in 2026 (CMake, C++17, CI, tests).
-
-> **Correct usage note:** old copies of the documentation (including
-> comments still visible in the header) describe a `CGI::instance()`
-> singleton accessor. That method does not exist. The real API is simply
-> to construct a `rude::CGI` object — the first construction triggers
-> parsing of the request, and every later `rude::CGI` object shares the
-> same parsed data.
+- Parses GET query strings and POST request bodies.
+- Supports URL-encoded and multipart form data, including file uploads.
+- Preserves repeated fields such as checkbox groups.
+- Provides access to cookies and `PATH_INFO` through the same query API.
+- Records whether each value came from a form, cookie, or path component.
+- Has no external dependencies beyond a C++17 standard library.
 
 ## Quick start
 
 ```cpp
 #include <rude/cgi.h>
+
 #include <iostream>
 
 int main()
 {
-    rude::CGI cgi; // reads REQUEST_METHOD, QUERY_STRING, stdin, cookies...
+    rude::CGI::maxPostLength(10 * 1024 * 1024); // 10 MiB request limit
+    rude::CGI::maxPostReadSeconds(30);           // 30-second read limit
+    rude::CGI request;
 
     std::cout << "Content-type: text/plain\r\n\r\n";
+    std::cout << "name: " << request.value("name") << "\n";
+    std::cout << "email: " << request["email"] << "\n";
 
-    std::cout << "name:  " << cgi.value("name")  << "\n"; // "" if missing
-    std::cout << "email: " << cgi["email"]       << "\n"; // operator[] shorthand
-
-    // repeated fields (checkbox groups) keep every value
-    for (int i = 0; i < cgi.numValues("color"); i++)
-        std::cout << "color: " << cgi.value("color", i) << "\n";
+    for (int i = 0; i < request.numValues("color"); ++i) {
+        std::cout << "color: " << request.value("color", i) << "\n";
+    }
 }
 ```
 
-Compile with:
+Compile an installed copy with pkg-config:
 
 ```sh
 c++ -std=c++17 app.cpp $(pkg-config --cflags --libs rudecgi)
 ```
 
-Test it from a shell without a web server by faking the CGI environment:
+You can exercise a CGI program from the shell without a web server:
 
 ```sh
-REQUEST_METHOD=GET QUERY_STRING='name=John%20Doe&color=blue&color=red' \
-HTTP_COOKIE='sessionid=429842' ./app
+REQUEST_METHOD=GET \
+QUERY_STRING='name=John%20Doe&color=blue&color=red' \
+HTTP_COOKIE='sessionid=429842' \
+./app
 ```
 
-## Building
+## Build and install
 
-Requires CMake ≥ 3.16 and any C++17 compiler. No other dependencies.
+RudeCGI requires CMake 3.16 or newer and a C++17 compiler.
 
 ```sh
-git clone https://github.com/mflood/rudecgi
+git clone https://github.com/mflood/rudecgi.git
 cd rudecgi
 cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
-ctest --test-dir build            # run the tests
-cmake --install build             # add --prefix ~/some/dir for a local install
+ctest --test-dir build
+cmake --install build --prefix ./install
 ```
 
-This builds a static library by default; add `-DBUILD_SHARED_LIBS=ON` for a
-shared library. An example CGI program lives in
-[`examples/demo.cpp`](examples/demo.cpp) (built as `build/examples/demo`).
+The default build is static. Pass `-DBUILD_SHARED_LIBS=ON` to build a shared
+library.
 
-### Using from CMake
+For an install outside the system prefix, point CMake consumers at it with
+`-DCMAKE_PREFIX_PATH=/path/to/install`. For pkg-config, add
+`/path/to/install/lib/pkgconfig` to `PKG_CONFIG_PATH`.
+
+The complete runnable example is in
+[`examples/demo.cpp`](examples/demo.cpp).
+
+## Use from CMake
+
+With an installed copy:
 
 ```cmake
 find_package(rudecgi REQUIRED)
 target_link_libraries(myapp PRIVATE rudecgi::rudecgi)
 ```
 
-Or vendor it with `FetchContent`:
+Or include it directly with `FetchContent`:
 
 ```cmake
 include(FetchContent)
 FetchContent_Declare(rudecgi
-    GIT_REPOSITORY https://github.com/mflood/rudecgi
-    GIT_TAG v5.2.0)
+    GIT_REPOSITORY https://github.com/mflood/rudecgi.git
+    GIT_TAG v5.4.0)
 FetchContent_MakeAvailable(rudecgi)
 target_link_libraries(myapp PRIVATE rudecgi::rudecgi)
 ```
 
-## API notes
+## Request lifecycle
 
-- The full API is documented in [`src/cgi.h`](src/cgi.h) and the
-  `rudecgi(3)` man page (ignore the `CGI::instance()` references — see the
-  note above).
-- **Parsing is lazy and happens once per process**: the first `rude::CGI`
-  constructed reads the environment and stdin; configuration calls such as
-  `CGI::parseCookies(false)` or `CGI::maxPostLength(bytes)` must happen
-  *before* that first construction.
-- **One namespace for everything**: query-string fields, POST fields,
-  cookies, and `PATH_INFO` data all land in the same collection —
-  `value("sessionid")` finds a cookie just as it finds a form field.
-  Use `datasource(...)` to learn where a field came from: it returns
-  `"form"`, `"cookie"`, or `"path"`.
-- **Missing fields are safe**: `value(fieldname)` returns `""` (never
-  `NULL`); use `exists(fieldname)` to distinguish missing from empty.
-- **Repeated fields**: `numValues("f")` and `value("f", n)` give access to
-  every value submitted under the same name, in order.
-- **File uploads** (multipart/form-data): `isFile()`, `value()` (the raw
-  bytes), `length()` (uploads may contain NUL bytes), `contenttype()`,
-  `filename()` (a sanitized name), and `filepath()` (the client-supplied
-  path).
+The first `rude::CGI` object constructed in a process reads the CGI
+environment and request body. Later instances share that parsed request.
+Configure parser limits before constructing the first instance:
 
-## Security notes
+```cpp
+rude::CGI::maxPostLength(10 * 1024 * 1024); // 10 MiB
+rude::CGI::maxPostReadSeconds(30);
+rude::CGI request;
+```
 
-- The POST reader trusts the `CONTENT_LENGTH` environment variable: it
-  allocates a buffer of that size and by default accepts any length
-  (`maxPostLength` defaults to unlimited, and a POST with a missing
-  `CONTENT_LENGTH` is not handled defensively). Real web servers always
-  set it truthfully, but if your program can be invoked with a hostile
-  environment, call `CGI::maxPostLength(bytes)` before the first
-  `rude::CGI` construction to cap it.
-- This is a 2005-era codebase modernized to build cleanly; it has not had
-  a security audit. Treat all returned values as untrusted user input.
+## Working with request data
 
-## History
+### Sources and repeated fields
 
-- **5.1.0** (2026) — CMake build; C++17; compiles warning-free with
-  `-Wall -Wextra`; ctype calls made safe for high-bit (UTF-8) input on
-  signed-char platforms; fixed a mismatched `delete` on upload filenames;
-  test suite and CI on Linux (x86_64 + ARM), macOS, and Windows, plus
-  ASan/UBSan. The legacy autotools files are still present but no longer
-  maintained.
-- **5.0.0** (2007) — last release of the original autotools era
-  (`CGIParser` renamed to `CGI`).
+Query-string fields, POST fields, cookies, and path data share one collection.
+Use `datasource()` to distinguish `"form"`, `"cookie"`, and `"path"` values.
+Use `numValues(name)` and `value(name, index)` to read repeated values in
+submission order.
+
+### Missing fields
+
+`value(name)` returns `""` for a missing field. Use `exists(name)` when an
+empty submitted value must be distinguished from a missing one.
+
+### File uploads
+
+For multipart uploads, use `isFile()`, `value()` for the raw bytes,
+`length()` for their size, `contenttype()`, `filename()` for the sanitized
+name, and `filepath()` for the client-supplied path. Uploaded data may contain
+NUL bytes, so use the reported length rather than treating it as a C string.
+
+## Secure deployment
+
+- Set `maxPostLength()` before constructing the first request object to bound
+  memory use for POST bodies.
+- Set `maxPostReadSeconds()` to suit the web server's request timeout policy.
+- Treat every returned value as untrusted input and validate it for its
+  destination context.
+- Generate server-side storage names for uploads; do not use a client-supplied
+  path as a filesystem destination.
+- Apply output escaping appropriate to HTML, HTTP headers, SQL, shell commands,
+  and other downstream consumers.
+
+## Documentation and support
+
+- Public API: [`src/cgi.h`](src/cgi.h)
+- Runnable example: [`examples/demo.cpp`](examples/demo.cpp)
+- Manual page: `rudecgi(3)`
+- Release notes: [`NEWS`](NEWS)
+- Bug reports: [GitHub Issues](https://github.com/mflood/rudecgi/issues)
 
 ## License
 
-GPL-2.0-or-later — see [COPYING](COPYING).
+GPL-2.0-or-later. See [`COPYING`](COPYING).
