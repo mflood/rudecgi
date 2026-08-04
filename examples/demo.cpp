@@ -1,8 +1,8 @@
 // demo.cpp - a minimal CGI program using RudeCGI.
 //
 // Construct a rude::CGI object and ask it for field values by name.
-// (Parsing of the CGI environment happens when the first rude::CGI
-// object is constructed — there is no CGI::instance() method.)
+// The first object parses the CGI environment; later objects in the same
+// process share the parsed request.
 //
 // Deploy it as a CGI program behind any web server, or try it straight
 // from a shell by faking the CGI environment:
